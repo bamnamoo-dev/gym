@@ -107,6 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const resTotalHours = $('res-total-hours');
     const resBase = $('res-base');
     const baseMath = $('base-math');
+    const discountedBaseRow = $('discounted-base-row');
+    const resDiscountedBase = $('res-discounted-base');
+    const discountedBaseMath = $('discounted-base-math');
     const lightingRow = $('lighting-row');
     const resLighting = $('res-lighting');
     const lightMath = $('light-math');
@@ -288,12 +291,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const subtotal = baseAmount + lightingAmount + coolingAmount + heatingAmount;
         const discountRate = getDiscountRate(state.category);
         const discountAmount = Math.floor(baseAmount * discountRate);
-        const total = (baseAmount - discountAmount) + lightingAmount + coolingAmount + heatingAmount;
+        const discountedBaseAmount = baseAmount - discountAmount;
+        const total = discountedBaseAmount + lightingAmount + coolingAmount + heatingAmount;
 
         setText(resSessionCount, `${totalSessions}${state.mode === 'long' ? '회' : '일'}`);
         setText(resTotalHours, `${formatNumber(totalHours)}시간`);
         setText(resBase, `${formatNumber(baseAmount)}원`);
         setText(baseMath, `단가 ${formatNumber(baseRate)}원 × ${state.duration}시간 × ${totalSessions}${state.mode === 'long' ? '회' : '일'}`);
+
+        if (discountRate > 0) {
+            updateVisibility(true, discountedBaseRow);
+            updateVisibility(true, discountedBaseMath);
+            setText(resDiscountedBase, `${formatNumber(discountedBaseAmount)}원`);
+            setText(discountedBaseMath, `기본 ${formatNumber(baseAmount)}원 - 감면액 ${formatNumber(discountAmount)}원`);
+        } else {
+            updateVisibility(false, discountedBaseRow);
+            updateVisibility(false, discountedBaseMath);
+        }
 
         const updateFacRow = (use, row, resEl, mathEl, val, mathText) => {
             updateVisibility(use, row);
