@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>서울시 학교 체육관 사용료 산정기 - 대시보드</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="dashboard-mode">
     <div class="background-blobs">
         <div class="blob blob-1"></div>
@@ -225,7 +229,13 @@
                             <span id="res-base">0원</span>
                         </div>
                         <div class="detail-math" id="base-math">단가 0원 × 0시간 × 0회</div>
-                        
+
+                        <div class="detail-row hidden" id="discounted-base-row">
+                            <span class="detail-label">감면 대관료 산출</span>
+                            <span id="res-discounted-base">0원</span>
+                        </div>
+                        <div class="detail-math hidden" id="discounted-base-math">기본 0원 - 감면액 0원</div>
+
                         <div class="detail-row" id="lighting-row">
                             <span class="detail-label">조명 사용료</span>
                             <span id="res-lighting">0원</span>
@@ -245,13 +255,15 @@
                         <div class="detail-math" id="heating-math">기본료 20% × 0시간 × 0회</div>
 
                         <div class="divider"></div>
-                        
+
                         <div class="detail-row subtotal">
                             <span>합계 (감면 전)</span>
                             <span id="res-subtotal">0원</span>
                         </div>
                         <div class="detail-row discount">
-                            <span>감면 적용 (<span id="res-discount-label">0%</span>)</span>
+                            <span>감면 적용 (<span id="res-discount-label">0%</span>) <span
+                                    style="font-size: 0.85em; color: var(--text-muted); font-weight: normal; margin-left: 5px;">(시설사용료는
+                                    감액 미적용)</span></span>
                             <span id="res-discount">0원</span>
                         </div>
                     </div>
@@ -310,4 +322,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
