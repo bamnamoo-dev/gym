@@ -172,6 +172,50 @@ select:focus, input:focus {
     background: #ffffff;
 }
 
+.label-with-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.label-with-btn label {
+    margin-bottom: 0 !important;
+}
+
+.btn-quick-fill {
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.btn-quick-fill:hover {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+    transform: translateY(-1px);
+}
+
+[data-theme="light"] .btn-quick-fill {
+    background: #e0e7ff;
+    color: #4338ca;
+    border-color: #c7d2fe;
+}
+
+[data-theme="light"] .btn-quick-fill:hover {
+    background: var(--primary);
+    color: #ffffff;
+}
+
 .date-range-grid {
     display: grid;
     grid-template-columns: 1fr auto 1fr;

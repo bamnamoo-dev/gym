@@ -219,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateLabel = $('date-label');
     const startDateInput = $('start-date');
     const endDateInput = $('end-date');
+    const btnQuick1Year = $('btn-quick-1year');
     const weekdayChecks = document.querySelectorAll('.day-check input');
     const excludeHolidaysCheck = $('exclude-holidays');
     const baseExcludeDatesInput = $('base-exclude-dates');
@@ -373,6 +374,77 @@ document.addEventListener('DOMContentLoaded', () => {
         ensureHolidaysForRange(state.startDate, state.endDate);
         updateUI(); 
     });
+
+    if (btnQuick1Year) {
+        btnQuick1Year.addEventListener('click', () => {
+            const now = new Date();
+            const currYear = now.getFullYear();
+            const currMonth = now.getMonth() + 1;
+            const baseYear = currMonth <= 2 ? currYear - 1 : currYear;
+            const nextYear = baseYear + 1;
+            const lastDayFeb = new Date(nextYear, 2, 0).getDate();
+
+            // 1. Switch to Long mode (정기 대관)
+            state.mode = 'long';
+            if (btnShort) btnShort.classList.remove('active');
+            if (btnLong) btnLong.classList.add('active');
+            if (weekdayContainer) weekdayContainer.classList.remove('hidden');
+
+            // 2. Set 1-Year Base Dates (3/1 ~ 익년 2월말)
+            state.startDate = `${baseYear}-03-01`;
+            state.endDate = `${nextYear}-02-${lastDayFeb}`;
+            if (startDateInput) startDateInput.value = state.startDate;
+            if (endDateInput) endDateInput.value = state.endDate;
+
+            // 3. Set Weekdays (선택된 요일이 없으면 토·일 기본 선택)
+            const checkedDays = Array.from(weekdayChecks).filter(c => c.checked);
+            if (checkedDays.length === 0) {
+                weekdayChecks.forEach(check => {
+                    if (check.value === '6' || check.value === '0') {
+                        check.checked = true;
+                    }
+                });
+                state.selectedDays = [6, 0];
+            } else {
+                state.selectedDays = checkedDays.map(c => parseInt(c.value));
+            }
+
+            // 4. Default Duration 2 Hours
+            state.duration = 2;
+            if (durationInput) durationInput.value = 2;
+            if (durationVal) durationVal.textContent = '2시간';
+
+            // 5. Exclude Holidays ON
+            state.excludeHolidays = true;
+            if (excludeHolidaysCheck) excludeHolidaysCheck.checked = true;
+
+            // 6. Cooling (6월 1일 ~ 8월 31일, 하루 2시간)
+            state.useCooling = true;
+            state.coolingStart = `${baseYear}-06-01`;
+            state.coolingEnd = `${baseYear}-08-31`;
+            state.coolingHours = 2;
+            if (useCoolingCheck) useCoolingCheck.checked = true;
+            if (coolingDetails) coolingDetails.classList.remove('hidden');
+            if (coolingStartInput) coolingStartInput.value = state.coolingStart;
+            if (coolingEndInput) coolingEndInput.value = state.coolingEnd;
+            if (coolingHoursInput) coolingHoursInput.value = 2;
+
+            // 7. Heating (11월 1일 ~ 익년 2월말, 하루 2시간)
+            state.useHeating = true;
+            state.heatingStart = `${baseYear}-11-01`;
+            state.heatingEnd = `${nextYear}-02-${lastDayFeb}`;
+            state.heatingHours = 2;
+            if (useHeatingCheck) useHeatingCheck.checked = true;
+            if (heatingDetails) heatingDetails.classList.remove('hidden');
+            if (heatingStartInput) heatingStartInput.value = state.heatingStart;
+            if (heatingEndInput) heatingEndInput.value = state.heatingEnd;
+            if (heatingHoursInput) heatingHoursInput.value = 2;
+
+            ensureHolidaysForRange(state.startDate, state.endDate);
+            updateUI();
+        });
+    }
+
     if (excludeHolidaysCheck) excludeHolidaysCheck.addEventListener('change', (e) => { state.excludeHolidays = e.target.checked; updateUI(); });
     if (baseExcludeDatesInput) baseExcludeDatesInput.addEventListener('input', (e) => { state.baseExcludeDates = e.target.value; updateUI(); });
 
