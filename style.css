@@ -965,10 +965,10 @@ select:focus, input:focus {
     display: none !important;
 }
 
-/* Print Styles (Rich, Official, Strictly 1-Page A4) */
+/* Print Styles (Rich, Official, Generous Spacing, Strictly 1-Page A4) */
 @media print {
     @page {
-        margin: 10mm 14mm;
+        margin: 15mm 18mm;
         size: A4 portrait;
     }
 
@@ -1011,38 +1011,39 @@ select:focus, input:focus {
 
     .print-header {
         text-align: center;
-        margin-bottom: 12px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #0f172a;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2.5px solid #0f172a;
         position: relative;
     }
 
     .print-badge {
         display: inline-block;
-        font-size: 8.5px;
+        font-size: 9px;
         font-weight: 700;
         color: #475569;
         background: #f1f5f9;
-        padding: 2px 8px;
+        padding: 3px 10px;
         border-radius: 4px;
         border: 1px solid #cbd5e1;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         letter-spacing: 0.5px;
     }
 
     .print-header h1 {
-        font-size: 18px !important;
+        font-size: 21px !important;
         font-weight: 800 !important;
         color: #0f172a !important;
-        margin: 2px 0 6px 0 !important;
+        margin: 4px 0 8px 0 !important;
         letter-spacing: -0.5px;
     }
 
     .print-meta-grid {
         display: flex;
         justify-content: space-between;
-        font-size: 10px;
+        font-size: 11px;
         color: #475569;
+        margin-top: 6px;
     }
 
     .print-meta-grid strong {
@@ -1050,14 +1051,14 @@ select:focus, input:focus {
     }
 
     .print-section {
-        margin-bottom: 10px;
+        margin-bottom: 16px;
     }
 
     .print-sec-title {
-        font-size: 11.5px !important;
+        font-size: 12.5px !important;
         font-weight: 700 !important;
         color: #0f172a !important;
-        margin: 0 0 4px 0 !important;
+        margin: 0 0 6px 0 !important;
         display: flex;
         align-items: center;
     }
@@ -1065,26 +1066,26 @@ select:focus, input:focus {
     .print-sec-title::before {
         content: "";
         display: inline-block;
-        width: 3px;
-        height: 11px;
+        width: 3.5px;
+        height: 12px;
         background: #3b82f6;
-        margin-right: 5px;
+        margin-right: 6px;
         border-radius: 2px;
     }
 
     .print-table {
         width: 100% !important;
         border-collapse: collapse !important;
-        font-size: 10.5px !important;
+        font-size: 11px !important;
         border-top: 1.5px solid #0f172a !important;
         border-bottom: 1.5px solid #0f172a !important;
     }
 
     .print-table th, 
     .print-table td {
-        padding: 5px 8px !important;
+        padding: 7px 10px !important;
         border: 1px solid #cbd5e1 !important;
-        line-height: 1.35 !important;
+        line-height: 1.45 !important;
     }
 
     .print-table th {
@@ -1097,6 +1098,7 @@ select:focus, input:focus {
     .print-table.calculation th {
         background: #e2e8f0 !important;
         font-weight: 700 !important;
+        padding: 8px 10px !important;
     }
 
     .print-table td {
@@ -1120,74 +1122,75 @@ select:focus, input:focus {
         background: #f8fafc !important;
         border-top: 1.5px solid #94a3b8 !important;
         color: #0f172a !important;
+        padding: 8px 10px !important;
     }
 
     .total-row td {
         background: #eff6ff !important;
         border-top: 2px solid #2563eb !important;
         border-bottom: 2px solid #2563eb !important;
-        padding: 8px 10px !important;
+        padding: 10px 12px !important;
     }
 
     .total-cell {
-        font-size: 12.5px !important;
+        font-size: 13.5px !important;
         color: #1e3a8a !important;
     }
 
     .total-cell .total-num {
-        font-size: 11.5px !important;
+        font-size: 12px !important;
         color: #2563eb !important;
-        margin-left: 4px;
+        margin-left: 5px;
     }
 
     .notice-sec {
         background: #fafafa !important;
         border: 1px solid #e2e8f0 !important;
         border-radius: 6px !important;
-        padding: 6px 10px !important;
-        margin-top: 6px !important;
-        margin-bottom: 8px !important;
+        padding: 10px 14px !important;
+        margin-top: 10px !important;
+        margin-bottom: 16px !important;
     }
 
     .notice-sec .print-sec-title {
-        font-size: 10px !important;
-        margin-bottom: 3px !important;
+        font-size: 11px !important;
+        margin-bottom: 5px !important;
     }
 
     .print-notice-list {
         margin: 0 !important;
-        padding-left: 14px !important;
-        font-size: 9.5px !important;
-        line-height: 1.35 !important;
+        padding-left: 16px !important;
+        font-size: 10px !important;
+        line-height: 1.55 !important;
         color: #475569 !important;
     }
 
     .print-notice-list li {
-        margin-bottom: 2px !important;
+        margin-bottom: 3px !important;
     }
 
     .print-footer {
         text-align: center;
-        margin-top: 10px;
-        padding-top: 6px;
+        margin-top: 22px;
+        padding-top: 8px;
     }
 
     .print-cert-text {
-        font-size: 10.5px !important;
+        font-size: 11.5px !important;
         font-weight: 500 !important;
         color: #334155 !important;
-        margin: 0 0 8px 0 !important;
+        margin: 0 0 12px 0 !important;
     }
 
     .print-sign-area {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 3px;
+        gap: 6px;
     }
 
     .print-date {
-        font-size: 11px !important;
+        font-size: 12px !important;
         font-weight: 600 !important;
         color: #0f172a !important;
     }
@@ -1196,15 +1199,15 @@ select:focus, input:focus {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        font-size: 12.5px !important;
+        gap: 8px;
+        font-size: 14.5px !important;
         font-weight: 800 !important;
         color: #0f172a !important;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     .seal-mark {
-        font-size: 9px !important;
+        font-size: 10px !important;
         font-weight: normal !important;
         color: #64748b !important;
     }
