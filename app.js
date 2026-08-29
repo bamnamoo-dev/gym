@@ -572,26 +572,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Excluded days breakdown (Holidays + Additional Excludes + Adj Days)
+        const hCount = holidaysInRange.length;
+        const validBaseExcludes = rawSessionDates.filter(d => baseExcludes.includes(d));
+        const eCount = validBaseExcludes.length;
+        const adjDays = state.baseAdjDays;
+
         if (state.excludeHolidays) {
-            setText(resHolidayCount, `${holidaysInRange.length}일 제외`);
-            if (holidaysInRange.length > 0) {
-                setText(holidayMath, holidaysInRange.join(', '));
-                updateVisibility(true, btnToggleHolidays);
+            const totalEx = hCount + eCount;
+            if (hCount > 0 && eCount > 0) {
+                setText(resHolidayCount, `${totalEx}일 제외 (공휴일 ${hCount} + 추가 ${eCount})`);
+            } else if (hCount > 0) {
+                setText(resHolidayCount, `${hCount}일 제외`);
+            } else if (eCount > 0) {
+                setText(resHolidayCount, `추가 ${eCount}일 제외`);
             } else {
-                setText(holidayMath, '선택 요일에 해당하는 공휴일 없음');
-                updateVisibility(false, btnToggleHolidays);
-                updateVisibility(false, holidayMath);
+                setText(resHolidayCount, `0일 제외`);
             }
         } else {
-            setText(resHolidayCount, `${holidaysInRange.length}일 (미제외)`);
-            if (holidaysInRange.length > 0) {
-                setText(holidayMath, `${holidaysInRange.join(', ')} (사용일수에 포함됨)`);
-                updateVisibility(true, btnToggleHolidays);
+            if (eCount > 0) {
+                setText(resHolidayCount, `추가 ${eCount}일 제외 (공휴일 미제외)`);
+            } else if (hCount > 0) {
+                setText(resHolidayCount, `${hCount}일 (미제외)`);
             } else {
-                setText(holidayMath, '공휴일 없음');
-                updateVisibility(false, btnToggleHolidays);
-                updateVisibility(false, holidayMath);
+                setText(resHolidayCount, `0일`);
             }
+        }
+
+        const hasExInfo = hCount > 0 || eCount > 0 || adjDays !== 0;
+        updateVisibility(hasExInfo, btnToggleHolidays);
+
+        if (hasExInfo) {
+            let html = '';
+            html += `<div class="pop-block"><strong>🏛️ 관공서 공휴일 (${hCount}일 ${state.excludeHolidays ? '제외' : '미제외'}):</strong><p>${hCount > 0 ? holidaysInRange.join(', ') : '선택 요일에 해당하는 공휴일 없음'}</p></div>`;
+            if (eCount > 0) {
+                html += `<div class="pop-block" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.15);"><strong>✏️ 추가 제외 일자 (${eCount}일 제외):</strong><p>${validBaseExcludes.join(', ')}</p></div>`;
+            }
+            if (adjDays !== 0) {
+                html += `<div class="pop-block" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.15);"><strong>🔢 일수 가감 (+/-):</strong><p>${adjDays > 0 ? '+' : ''}${adjDays}일 조정</p></div>`;
+            }
+            if (holidayMath) holidayMath.innerHTML = html;
+        } else {
+            if (holidayMath) holidayMath.innerHTML = '<p>제외일 없음</p>';
+            updateVisibility(false, holidayMath);
         }
 
         setText(resSubtotal, `${formatNumber(subtotal)}원`);
