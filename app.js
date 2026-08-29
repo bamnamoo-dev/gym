@@ -54,13 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return dt.getFullYear() === y && dt.getMonth() + 1 === m && dt.getDate() === d;
     }
 
-    function formatAutoDate(raw) {
+    function formatAutoDate(raw, isDeleting) {
         if (!raw) return '';
         const digits = raw.replace(/\D/g, '').slice(0, 8);
-        if (digits.length <= 4) {
+        if (digits.length === 0) return '';
+
+        if (digits.length < 4) {
             return digits;
-        } else if (digits.length <= 6) {
+        } else if (digits.length === 4) {
+            return isDeleting ? digits : `${digits}-`;
+        } else if (digits.length === 5) {
             return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+        } else if (digits.length === 6) {
+            return isDeleting ? `${digits.slice(0, 4)}-${digits.slice(4)}` : `${digits.slice(0, 4)}-${digits.slice(4)}-`;
         } else {
             return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
         }
@@ -68,23 +74,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setupDateMask(input, onChange) {
         if (!input) return;
+        const wrap = input.closest('.date-input-wrap');
+        const hiddenPicker = wrap ? wrap.querySelector('.native-picker') : null;
+        const calBtn = wrap ? wrap.querySelector('.btn-cal') : null;
+
+        let isDeleting = false;
+        input.addEventListener('keydown', (e) => {
+            isDeleting = (e.key === 'Backspace' || e.key === 'Delete');
+        });
+
         input.addEventListener('input', () => {
             const oldVal = input.value;
-            const formatted = formatAutoDate(oldVal);
+            const formatted = formatAutoDate(oldVal, isDeleting);
             if (oldVal !== formatted) {
                 input.value = formatted;
             }
             if (isValidDate(formatted)) {
+                if (hiddenPicker) hiddenPicker.value = formatted;
                 onChange(formatted);
+            } else if (formatted === '') {
+                if (hiddenPicker) hiddenPicker.value = '';
+                onChange('');
             }
         });
+
         input.addEventListener('change', () => {
-            const formatted = formatAutoDate(input.value);
+            const formatted = formatAutoDate(input.value, false);
             input.value = formatted;
             if (isValidDate(formatted)) {
+                if (hiddenPicker) hiddenPicker.value = formatted;
                 onChange(formatted);
+            } else if (formatted === '') {
+                if (hiddenPicker) hiddenPicker.value = '';
+                onChange('');
             }
         });
+
+        if (calBtn && hiddenPicker) {
+            calBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                try {
+                    if (hiddenPicker.showPicker) {
+                        hiddenPicker.showPicker();
+                    } else {
+                        hiddenPicker.focus();
+                        hiddenPicker.click();
+                    }
+                } catch (err) {
+                    hiddenPicker.click();
+                }
+            });
+
+            hiddenPicker.addEventListener('change', () => {
+                if (hiddenPicker.value) {
+                    input.value = hiddenPicker.value;
+                    onChange(hiddenPicker.value);
+                }
+            });
+        }
     }
 
     /**
@@ -260,20 +307,18 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
 
     function initDates() {
-        const today = new Date();
-        const dateStr = today.toISOString().split('T')[0];
-        state.startDate = dateStr;
-        state.endDate = dateStr;
-        if (startDateInput) startDateInput.value = dateStr;
-        if (endDateInput) endDateInput.value = dateStr;
+        state.startDate = '';
+        state.endDate = '';
+        if (startDateInput) startDateInput.value = '';
+        if (endDateInput) endDateInput.value = '';
 
         ['light', 'cooling', 'heating'].forEach(key => {
-            state[`${key}Start`] = dateStr;
-            state[`${key}End`] = dateStr;
+            state[`${key}Start`] = '';
+            state[`${key}End`] = '';
             const sIn = $(`${key}-start`);
             const eIn = $(`${key}-end`);
-            if (sIn) sIn.value = dateStr;
-            if (eIn) eIn.value = dateStr;
+            if (sIn) sIn.value = '';
+            if (eIn) eIn.value = '';
         });
 
         state.selectedDays = [2, 4];

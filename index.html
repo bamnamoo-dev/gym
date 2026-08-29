@@ -54,9 +54,17 @@
                     <div class="input-group">
                         <label id="date-label">대관 기간</label>
                         <div class="date-range-grid">
-                            <input type="text" id="start-date" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                            <div class="date-input-wrap">
+                                <input type="text" id="start-date" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                <input type="date" class="native-picker" tabindex="-1">
+                                <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
+                            </div>
                             <span class="sep">~</span>
-                            <input type="text" id="end-date" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                            <div class="date-input-wrap">
+                                <input type="text" id="end-date" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                <input type="date" class="native-picker" tabindex="-1">
+                                <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
+                            </div>
                         </div>
                     </div>
 
@@ -133,9 +141,17 @@
                         </div>
                         <div id="lighting-details" class="hvac-details-panel hidden">
                             <div class="panel-row">
-                                <input type="text" id="light-start" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                <div class="date-input-wrap">
+                                    <input type="text" id="light-start" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                    <input type="date" class="native-picker" tabindex="-1">
+                                    <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
+                                </div>
                                 <span>~</span>
-                                <input type="text" id="light-end" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                <div class="date-input-wrap">
+                                    <input type="text" id="light-end" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                    <input type="date" class="native-picker" tabindex="-1">
+                                    <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
+                                </div>
                             </div>
                             <div class="panel-row">
                                 <span>회당</span>
@@ -161,9 +177,17 @@
                         </div>
                         <div id="cooling-details" class="hvac-details-panel hidden">
                             <div class="panel-row">
-                                <input type="text" id="cooling-start" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                <div class="date-input-wrap">
+                                    <input type="text" id="cooling-start" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                    <input type="date" class="native-picker" tabindex="-1">
+                                    <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
+                                </div>
                                 <span>~</span>
-                                <input type="text" id="cooling-end" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                <div class="date-input-wrap">
+                                    <input type="text" id="cooling-end" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                    <input type="date" class="native-picker" tabindex="-1">
+                                    <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
+                                </div>
                             </div>
                             <div class="panel-row">
                                 <span>회당</span>
@@ -189,9 +213,17 @@
                         </div>
                         <div id="heating-details" class="hvac-details-panel hidden">
                             <div class="panel-row">
-                                <input type="text" id="heating-start" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                <div class="date-input-wrap">
+                                    <input type="text" id="heating-start" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                    <input type="date" class="native-picker" tabindex="-1">
+                                    <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
+                                </div>
                                 <span>~</span>
-                                <input type="text" id="heating-end" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                <div class="date-input-wrap">
+                                    <input type="text" id="heating-end" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
+                                    <input type="date" class="native-picker" tabindex="-1">
+                                    <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
+                                </div>
                             </div>
                             <div class="panel-row">
                                 <span>회당</span>
