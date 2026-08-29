@@ -732,11 +732,49 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         setText($('print-category'), catLabels[state.category] || '일반');
 
-        const coolingDetailStr = state.useCooling && state.coolingStart && state.coolingEnd ? `${state.coolingStart} ~ ${state.coolingEnd} (${coolingSessions}회 / ${coolingSessions * state.coolingHours}시간)` : '미사용';
-        setText($('print-cooling-detail'), coolingDetailStr);
+        // Detailed Exclusions for Print
+        let exDetailHtml = '';
+        if (state.excludeHolidays && hCount > 0) {
+            exDetailHtml += `<div><strong>• 관공서 공휴일 (${hCount}일):</strong> ${holidaysInRange.join(', ')}</div>`;
+        } else if (!state.excludeHolidays && hCount > 0) {
+            exDetailHtml += `<div><strong>• 관공서 공휴일 (${hCount}일):</strong> 공휴일 자동제외 미적용 (사용일에 포함)</div>`;
+        }
 
-        const heatingDetailStr = state.useHeating && state.heatingStart && state.heatingEnd ? `${state.heatingStart} ~ ${state.heatingEnd} (${heatingSessions}회 / ${heatingSessions * state.heatingHours}시간)` : '미사용';
-        setText($('print-heating-detail'), heatingDetailStr);
+        if (eCount > 0) {
+            if (exDetailHtml) exDetailHtml += `<div style="margin-top: 3px;">`;
+            else exDetailHtml += `<div>`;
+            exDetailHtml += `<strong>• 추가 제외 일자 (${eCount}일):</strong> ${validBaseExcludes.map(it => it.display).join(', ')}</div>`;
+        }
+
+        if (!exDetailHtml) {
+            exDetailHtml = '<span style="color: #64748b;">제외일 없음 (전체 일정 정상 대관)</span>';
+        }
+
+        const printExDetailEl = $('print-excludes-detail');
+        if (printExDetailEl) printExDetailEl.innerHTML = exDetailHtml;
+
+        // Facility Details with Specific Excludes
+        let coolingDetailStr = '미사용';
+        if (state.useCooling && state.coolingStart && state.coolingEnd) {
+            coolingDetailStr = `${state.coolingStart} ~ ${state.coolingEnd} (${coolingSessions}회 / ${coolingSessions * state.coolingHours}시간)`;
+            const coolingExList = parseExcluded(state.coolingExcludeDates).filter(it => isWithinRange(it.date, state.coolingStart, state.coolingEnd));
+            if (coolingExList.length > 0) {
+                coolingDetailStr += `<br><span style="font-size: 9.5px; color: #475569;">• 냉방 단독 제외: ${coolingExList.map(it => it.display).join(', ')}</span>`;
+            }
+        }
+        const printCoolingEl = $('print-cooling-detail');
+        if (printCoolingEl) printCoolingEl.innerHTML = coolingDetailStr;
+
+        let heatingDetailStr = '미사용';
+        if (state.useHeating && state.heatingStart && state.heatingEnd) {
+            heatingDetailStr = `${state.heatingStart} ~ ${state.heatingEnd} (${heatingSessions}회 / ${heatingSessions * state.heatingHours}시간)`;
+            const heatingExList = parseExcluded(state.heatingExcludeDates).filter(it => isWithinRange(it.date, state.heatingStart, state.heatingEnd));
+            if (heatingExList.length > 0) {
+                heatingDetailStr += `<br><span style="font-size: 9.5px; color: #475569;">• 난방 단독 제외: ${heatingExList.map(it => it.display).join(', ')}</span>`;
+            }
+        }
+        const printHeatingEl = $('print-heating-detail');
+        if (printHeatingEl) printHeatingEl.innerHTML = heatingDetailStr;
 
         // Calculation Table
         setText($('print-calc-base'), `단가 ${formatNumber(baseRate)}원 × ${state.duration}시간 × ${totalSessions}${state.mode === 'long' ? '회' : '일'}`);
