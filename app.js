@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
             sports: { small: 15000, medium: 20000, large: 30000 },
             event: { small: 30000, medium: 40000, large: 60000 }
         },
-        lightRate: 5000,
         size: 'medium',
         duration: 2,
         category: 'none',
@@ -15,29 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedDays: [],
         excludeHolidays: false,
         baseExcludeDates: '',
-        baseAdjDays: 0,
         
-        // Facilities State
-        useLighting: false,
-        lightStart: '',
-        lightEnd: '',
-        lightHours: 2,
-        lightExcludeDates: '',
-        lightAdjDays: 0,
-
+        // Facilities State (Cooling / Heating)
         useCooling: false,
         coolingStart: '',
         coolingEnd: '',
         coolingHours: 2,
         coolingExcludeDates: '',
-        coolingAdjDays: 0,
 
         useHeating: false,
         heatingStart: '',
         heatingEnd: '',
         heatingHours: 2,
         heatingExcludeDates: '',
-        heatingAdjDays: 0,
 
         theme: 'dark'
     };
@@ -239,13 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const categorySelect = $('category');
 
     // Facilities DOM
-    const useLightingCheck = $('use-lighting');
-    const lightingDetails = $('lighting-details');
-    const lightStartInput = $('light-start');
-    const lightEndInput = $('light-end');
-    const lightHoursInput = $('light-hours');
-    const lightExcludeDatesInput = $('light-exclude-dates');
-
     const useCoolingCheck = $('use-cooling');
     const coolingDetails = $('cooling-details');
     const coolingStartInput = $('cooling-start');
@@ -268,9 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const discountedBaseRow = $('discounted-base-row');
     const resDiscountedBase = $('res-discounted-base');
     const discountedBaseMath = $('discounted-base-math');
-    const lightingRow = $('lighting-row');
-    const resLighting = $('res-lighting');
-    const lightMath = $('light-math');
     const coolingRow = $('cooling-row');
     const resCooling = $('res-cooling');
     const coolingMath = $('cooling-math');
@@ -416,7 +395,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (excludeEl) excludeEl.addEventListener('input', (e) => { state[`${key}ExcludeDates`] = e.target.value; updateUI(); });
     };
 
-    setupFacility('light', useLightingCheck, lightingDetails, lightStartInput, lightEndInput, lightHoursInput, lightExcludeDatesInput);
     setupFacility('cooling', useCoolingCheck, coolingDetails, coolingStartInput, coolingEndInput, coolingHoursInput, coolingExcludeDatesInput);
     setupFacility('heating', useHeatingCheck, heatingDetails, heatingStartInput, heatingEndInput, heatingHoursInput, heatingExcludeDatesInput);
 
@@ -432,7 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if ($('set-rate-small')) $('set-rate-small').value = state.rates.sports.small;
         if ($('set-rate-medium')) $('set-rate-medium').value = state.rates.sports.medium;
         if ($('set-rate-large')) $('set-rate-large').value = state.rates.sports.large;
-        if ($('set-light-rate')) $('set-light-rate').value = state.lightRate;
         if (modal) modal.classList.add('active');
     });
 
@@ -441,7 +418,6 @@ document.addEventListener('DOMContentLoaded', () => {
         state.rates.sports.small = parseInt($('set-rate-small').value) || 0;
         state.rates.sports.medium = parseInt($('set-rate-medium').value) || 0;
         state.rates.sports.large = parseInt($('set-rate-large').value) || 0;
-        state.lightRate = parseInt($('set-light-rate').value) || 0;
         saveSettings(); updateUI(); if (modal) modal.classList.remove('active');
     });
 
@@ -529,22 +505,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return Math.max(0, count);
         };
 
-        const lightSessions = calcFacSessions(state.useLighting, state.lightStart, state.lightEnd, state.lightExcludeDates);
         const coolingSessions = calcFacSessions(state.useCooling, state.coolingStart, state.coolingEnd, state.coolingExcludeDates);
         const heatingSessions = calcFacSessions(state.useHeating, state.heatingStart, state.heatingEnd, state.heatingExcludeDates);
 
         const hvacSurchargeRate = baseRate * 0.2;
         const totalHours = totalSessions * state.duration;
         const baseAmount = totalSessions * state.duration * baseRate;
-        const lightingAmount = lightSessions * state.lightHours * state.lightRate;
         const coolingAmount = coolingSessions * state.coolingHours * hvacSurchargeRate;
         const heatingAmount = heatingSessions * state.heatingHours * hvacSurchargeRate;
         
-        const subtotal = baseAmount + lightingAmount + coolingAmount + heatingAmount;
+        const subtotal = baseAmount + coolingAmount + heatingAmount;
         const discountRate = getDiscountRate(state.category);
         const discountAmount = Math.floor(baseAmount * discountRate);
         const discountedBaseAmount = baseAmount - discountAmount;
-        const total = discountedBaseAmount + lightingAmount + coolingAmount + heatingAmount;
+        const total = discountedBaseAmount + coolingAmount + heatingAmount;
 
         setText(resSessionCount, `${totalSessions}${state.mode === 'long' ? '회' : '일'}`);
         setText(resTotalHours, `${formatNumber(totalHours)}시간`);
@@ -571,7 +545,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const sessT = state.mode === 'long' ? '회' : '일';
-        updateFacRow(state.useLighting, lightingRow, resLighting, lightMath, lightingAmount, `단가 ${formatNumber(state.lightRate)}원 × ${state.lightHours}시간 × ${lightSessions}${sessT}`);
         updateFacRow(state.useCooling, coolingRow, resCooling, coolingMath, coolingAmount, `기본료 20%(${formatNumber(hvacSurchargeRate)}원) × ${state.coolingHours}시간 × ${coolingSessions}${sessT}`);
         updateFacRow(state.useHeating, heatingRow, resHeating, heatingMath, heatingAmount, `기본료 20%(${formatNumber(hvacSurchargeRate)}원) × ${state.heatingHours}시간 × ${heatingSessions}${sessT}`);
 
@@ -747,13 +720,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     function formatNumber(num) { return num.toLocaleString(); }
-    function saveSettings() { localStorage.setItem('school-gym-rates-v5', JSON.stringify({ rates: state.rates, lightRate: state.lightRate, theme: state.theme })); }
+    function saveSettings() { localStorage.setItem('school-gym-rates-v6', JSON.stringify({ rates: state.rates, theme: state.theme })); }
     function loadSettings() {
-        const saved = localStorage.getItem('school-gym-rates-v5');
+        const saved = localStorage.getItem('school-gym-rates-v6');
         if (saved) {
             const data = JSON.parse(saved);
             if (data.rates) state.rates = data.rates;
-            state.lightRate = data.lightRate;
             state.theme = data.theme || 'dark';
         }
     }

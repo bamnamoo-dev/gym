@@ -144,41 +144,7 @@
 
                     <div class="facility-sync-notice">
                         <i class="fas fa-check-circle"></i>
-                        <span>기본 대관의 <strong>공휴일 및 제외일자</strong>는 부대시설(냉난방/조명)에서도 <strong>자동 제외</strong>됩니다.</span>
-                    </div>
-
-                    <div class="hvac-box">
-                        <div class="facility-item">
-                            <label class="checkbox-container main-toggle">
-                                <input type="checkbox" id="use-lighting">
-                                <span class="checkmark"></span>
-                                <span class="label-text">조명 시설 사용</span>
-                            </label>
-                        </div>
-                        <div id="lighting-details" class="hvac-details-panel hidden">
-                            <div class="panel-row">
-                                <div class="date-input-wrap">
-                                    <input type="text" id="light-start" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
-                                    <input type="date" class="native-picker" tabindex="-1">
-                                    <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
-                                </div>
-                                <span>~</span>
-                                <div class="date-input-wrap">
-                                    <input type="text" id="light-end" class="date-mask-input" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" inputmode="numeric">
-                                    <input type="date" class="native-picker" tabindex="-1">
-                                    <button type="button" class="btn-cal" title="달력 열기" tabindex="-1"><i class="far fa-calendar-alt"></i></button>
-                                </div>
-                            </div>
-                            <div class="panel-row">
-                                <span>회당</span>
-                                <input type="number" id="light-hours" value="2" min="1" max="12">
-                                <span>시간</span>
-                            </div>
-                            <div class="panel-row full">
-                                <label class="sub-label">조명 단독 제외 일자</label>
-                                <input type="text" id="light-exclude-dates" placeholder="예: 2026-05-01, 2026-06-05">
-                            </div>
-                        </div>
+                        <span>기본 대관의 <strong>공휴일 및 제외일자</strong>는 <strong>냉·난방기 사용 횟수</strong>에서도 <strong>자동 제외</strong>됩니다.</span>
                     </div>
 
                     <div class="hvac-box">
@@ -281,12 +247,6 @@
                             <span id="res-discounted-base">0원</span>
                         </div>
                         <div class="detail-math hidden" id="discounted-base-math">기본 0원 - 감면액 0원</div>
-
-                        <div class="detail-row" id="lighting-row">
-                            <span class="detail-label">조명 사용료</span>
-                            <span id="res-lighting">0원</span>
-                        </div>
-                        <div class="detail-math" id="light-math">단가 0원 × 0시간 × 0회</div>
 
                         <div class="detail-row" id="cooling-row">
                             <span class="detail-label">냉방 사용료</span>
@@ -484,10 +444,6 @@
                             <input type="number" id="set-rate-large" value="30000" step="1000">
                         </div>
                     </div>
-                </div>
-                <div class="input-group">
-                    <label>조명 시설 시간당 요금 (원)</label>
-                    <input type="number" id="set-light-rate" value="5000" step="1000">
                 </div>
                 <div class="input-group">
                     <label>냉·난방기 사용료 산정 기준</label>
