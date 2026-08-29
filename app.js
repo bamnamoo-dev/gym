@@ -692,11 +692,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
         animateNumber(resTotal, total);
         
-        const resultBody = document.querySelector('.result-card .card-body');
-        if (resultBody) {
-            const now = new Date();
-            resultBody.setAttribute('data-date', `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일`);
+        // Sync Print Document
+        const now = new Date();
+        const dateStrKr = `${now.getFullYear()}년 ${String(now.getMonth() + 1).padStart(2, '0')}월 ${String(now.getDate()).padStart(2, '0')}일`;
+        setText($('print-issue-date'), dateStrKr);
+        setText($('print-sign-date'), dateStrKr);
+
+        const sizeLabel = state.size === 'small' ? '360㎡ 미만' : state.size === 'large' ? '720㎡ 이상' : '360㎡ 이상 ~ 720㎡ 미만';
+        setText($('print-gym-size'), sizeLabel);
+
+        const periodStr = (state.startDate && state.endDate) ? `${state.startDate} ~ ${state.endDate}` : '기간 미설정';
+        setText($('print-period'), periodStr);
+
+        const daysMap = { 1: '월', 2: '화', 3: '수', 4: '목', 5: '금', 6: '토', 0: '일' };
+        const daysStr = state.mode === 'long' ? (state.selectedDays.length > 0 ? state.selectedDays.map(d => daysMap[d]).join(', ') : '요일 미선택') : '단기 대관';
+        setText($('print-schedule'), `${daysStr} (회당 ${state.duration}시간)`);
+        setText($('print-sessions'), `${totalSessions}${state.mode === 'long' ? '회' : '일'} / 총 ${formatNumber(totalHours)}시간`);
+        
+        const exSummary = resHolidayCount ? resHolidayCount.textContent : '0일 제외';
+        setText($('print-excludes'), exSummary);
+
+        const catLabels = {
+            'resident-long': '지역 주민 (6개월+ / 60% 감면)',
+            'vulnerable': '사회적 배려 대상 (50% 감면)',
+            'worker-long': '관외 직장인 동호회 (40% 감면)',
+            'official': '공식 행사 (100% 면제)',
+            'none': '일반 (감면 미해당)'
+        };
+        setText($('print-category'), catLabels[state.category] || '일반');
+
+        const coolingDetailStr = state.useCooling && state.coolingStart && state.coolingEnd ? `${state.coolingStart} ~ ${state.coolingEnd} (${coolingSessions}회 / ${coolingSessions * state.coolingHours}시간)` : '미사용';
+        setText($('print-cooling-detail'), coolingDetailStr);
+
+        const heatingDetailStr = state.useHeating && state.heatingStart && state.heatingEnd ? `${state.heatingStart} ~ ${state.heatingEnd} (${heatingSessions}회 / ${heatingSessions * state.heatingHours}시간)` : '미사용';
+        setText($('print-heating-detail'), heatingDetailStr);
+
+        // Calculation Table
+        setText($('print-calc-base'), `단가 ${formatNumber(baseRate)}원 × ${state.duration}시간 × ${totalSessions}${state.mode === 'long' ? '회' : '일'}`);
+        setText($('print-hours-base'), `${formatNumber(totalHours)}시간`);
+        setText($('print-rate-base'), `${formatNumber(baseRate)}원`);
+        setText($('print-amount-base'), `${formatNumber(baseAmount)}원`);
+
+        updateVisibility(discountRate > 0, $('print-row-discount'));
+        if (discountRate > 0) {
+            setText($('print-calc-discount'), `${catLabels[state.category]} 감면 적용`);
+            setText($('print-rate-discount'), `-${Math.round(discountRate * 100)}%`);
+            setText($('print-amount-discount'), `-${formatNumber(discountAmount)}원`);
         }
+
+        updateVisibility(state.useCooling, $('print-row-cooling'));
+        if (state.useCooling) {
+            setText($('print-calc-cooling'), `기본단가 20%(${formatNumber(hvacSurchargeRate)}원) × ${state.coolingHours}시간 × ${coolingSessions}회`);
+            setText($('print-hours-cooling'), `${coolingSessions * state.coolingHours}시간`);
+            setText($('print-rate-cooling'), `${formatNumber(hvacSurchargeRate)}원`);
+            setText($('print-amount-cooling'), `${formatNumber(coolingAmount)}원`);
+        }
+
+        updateVisibility(state.useHeating, $('print-row-heating'));
+        if (state.useHeating) {
+            setText($('print-calc-heating'), `기본단가 20%(${formatNumber(hvacSurchargeRate)}원) × ${state.heatingHours}시간 × ${heatingSessions}회`);
+            setText($('print-hours-heating'), `${heatingSessions * state.heatingHours}시간`);
+            setText($('print-rate-heating'), `${formatNumber(hvacSurchargeRate)}원`);
+            setText($('print-amount-heating'), `${formatNumber(heatingAmount)}원`);
+        }
+
+        setText($('print-amount-hvac'), `${formatNumber(hvacTotal)}원`);
+        setText($('print-total-korean'), numberToKorean(total));
+        setText($('print-amount-total'), formatNumber(total));
+    }
+
+    function numberToKorean(number) {
+        if (!number || number === 0) return '금 영원정';
+        const units = ['', '만', '억', '조'];
+        const digits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
+        const subUnits = ['', '십', '백', '천'];
+        
+        let numStr = String(Math.floor(number));
+        let result = '';
+        let unitIdx = 0;
+        
+        while (numStr.length > 0) {
+            const chunk = numStr.slice(-4);
+            numStr = numStr.slice(0, -4);
+            let chunkStr = '';
+            for (let i = 0; i < chunk.length; i++) {
+                const d = parseInt(chunk[i]);
+                const pos = chunk.length - i - 1;
+                if (d > 0) {
+                    chunkStr += digits[d] + subUnits[pos];
+                }
+            }
+            if (chunkStr) {
+                result = chunkStr + units[unitIdx] + ' ' + result;
+            }
+            unitIdx++;
+        }
+        return '금 ' + result.trim() + '원정';
     }
 
     function setText(el, val) { if (el) el.textContent = val; }

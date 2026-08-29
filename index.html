@@ -296,6 +296,134 @@
         </div>
     </main>
 
+    <!-- Dedicated Print Document (Visible only when Printing) -->
+    <div id="print-document" class="print-only">
+        <div class="print-header">
+            <div class="print-badge">서울특별시교육청 공문서 서식</div>
+            <h1>학교 시설(체육관) 사용료 산출 내역서</h1>
+            <div class="print-meta-grid">
+                <div class="meta-item"><span>발행일자:</span> <strong id="print-issue-date">2026년 08월 30일</strong></div>
+                <div class="meta-item"><span>산정근거:</span> <strong>서울특별시립학교 시설개방 조례</strong></div>
+            </div>
+        </div>
+
+        <div class="print-section">
+            <h2 class="print-sec-title">1. 대관 신청 및 기본 조건</h2>
+            <table class="print-table">
+                <tbody>
+                    <tr>
+                        <th style="width: 18%;">시설 규모</th>
+                        <td id="print-gym-size" style="width: 32%;">360㎡ 이상 ~ 720㎡ 미만</td>
+                        <th style="width: 18%;">대관 기간</th>
+                        <td id="print-period" style="width: 32%;">2026-03-01 ~ 2027-02-28</td>
+                    </tr>
+                    <tr>
+                        <th>사용 요일 / 시간</th>
+                        <td id="print-schedule">월, 화, 수, 목, 금 (회당 2시간)</td>
+                        <th>총 이용 횟수 / 시간</th>
+                        <td id="print-sessions">245회 / 총 490시간</td>
+                    </tr>
+                    <tr>
+                        <th>공휴일 / 제외일</th>
+                        <td id="print-excludes">관공서 공휴일 15일 제외</td>
+                        <th>조례 감면 대상</th>
+                        <td id="print-category">지역 주민 (60% 감면)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="print-section">
+            <h2 class="print-sec-title">2. 부대시설(냉·난방기) 이용 내역</h2>
+            <table class="print-table">
+                <tbody>
+                    <tr>
+                        <th style="width: 18%;">냉방기 사용</th>
+                        <td id="print-cooling-detail" style="width: 32%;">2026-06-01 ~ 2026-08-31 (63회 / 126시간)</td>
+                        <th style="width: 18%;">난방기 사용</th>
+                        <td id="print-heating-detail" style="width: 32%;">2026-11-01 ~ 2027-02-28 (81회 / 162시간)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="print-section">
+            <h2 class="print-sec-title">3. 시설 사용료 세부 산정 명세</h2>
+            <table class="print-table calculation">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">구분</th>
+                        <th style="width: 30%;">산출 기준 및 수식</th>
+                        <th style="width: 15%;">수량(시간)</th>
+                        <th style="width: 15%;">시간당 단가</th>
+                        <th style="width: 20%;">산출 금액</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>기본 대관료</strong></td>
+                        <td id="print-calc-base">단가 20,000원 × 2시간 × 245회</td>
+                        <td id="print-hours-base">490시간</td>
+                        <td id="print-rate-base">20,000원</td>
+                        <td id="print-amount-base" class="text-right">9,800,000원</td>
+                    </tr>
+                    <tr id="print-row-discount">
+                        <td><strong>조례 감면액</strong></td>
+                        <td id="print-calc-discount">지역 주민 (60% 감면 적용)</td>
+                        <td>-</td>
+                        <td id="print-rate-discount">-60%</td>
+                        <td id="print-amount-discount" class="text-right discount">-5,880,000원</td>
+                    </tr>
+                    <tr id="print-row-cooling">
+                        <td><strong>냉방 사용료</strong></td>
+                        <td id="print-calc-cooling">기본단가 20%(4,000원) × 2시간 × 63회</td>
+                        <td id="print-hours-cooling">126시간</td>
+                        <td id="print-rate-cooling">4,000원</td>
+                        <td id="print-amount-cooling" class="text-right">504,000원</td>
+                    </tr>
+                    <tr id="print-row-heating">
+                        <td><strong>난방 사용료</strong></td>
+                        <td id="print-calc-heating">기본단가 20%(4,000원) × 2시간 × 81회</td>
+                        <td id="print-hours-heating">162시간</td>
+                        <td id="print-rate-heating">4,000원</td>
+                        <td id="print-amount-heating" class="text-right">648,000원</td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="4"><strong>냉·난방 사용료 합계 (※ 학교회계 지침상 시설적립금에서 제외)</strong></td>
+                        <td id="print-amount-hvac" class="text-right"><strong>1,152,000원</strong></td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="2"><strong>최종 예상 사용료 (총 납부액)</strong></td>
+                        <td colspan="3" class="text-right total-cell">
+                            <strong id="print-total-korean">금 오백칠만이천원정</strong> 
+                            <span class="total-num">(₩<span id="print-amount-total">5,072,000</span>)</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="print-section notice-sec">
+            <h2 class="print-sec-title">4. 법적 근거 및 회계 처리 안내</h2>
+            <ul class="print-notice-list">
+                <li>본 산출 내역서는 <strong>「서울특별시립학교 시설의 개방 및 주민이용에 관한 조례」</strong> 제7조(사용료) 및 제8조(사용료 감면)에 의거하여 정밀 산출되었습니다.</li>
+                <li>냉·난방비는 전기·가스 실사용 공과금이므로 <strong>조례 감면 대상에서 제외</strong>되며, <strong>학교 시설적립금 대상에서 제외</strong>되어 실비 징수됩니다.</li>
+                <li>관공서 법정 공휴일 및 정부 지정 대체공휴일은 <strong>한국천문연구원(KASI) 특일 정보 공식 연동</strong>에 따라 사용 일수에서 정확히 자동 제외되었습니다.</li>
+            </ul>
+        </div>
+
+        <div class="print-footer">
+            <p class="print-cert-text">위와 같이 서울특별시교육청 조례 및 지침에 따라 시설 사용료가 정당하게 산출되었음을 확인합니다.</p>
+            <div class="print-sign-area">
+                <div class="print-date" id="print-sign-date">2026년 08월 30일</div>
+                <div class="print-issuer">
+                    <span>서울특별시교육청 학교 체육관 대관 관리시스템</span>
+                    <span class="seal-mark">[직인생략]</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- User Guide Modal -->
     <div id="guide-modal" class="modal">
         <div class="modal-content card guide-modal-content">
