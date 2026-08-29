@@ -373,6 +373,46 @@ select:focus, input:focus {
 
 .divider { height: 1px; background: var(--card-border); margin: 0.75rem 0; }
 
+.btn-calculate {
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    margin-bottom: 1.2rem;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    transition: all 0.25s ease;
+}
+
+.btn-calculate:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+}
+
+.btn-calculate:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.btn-calculate i {
+    font-size: 1.1rem;
+    transition: transform 0.3s;
+}
+
+.btn-calculate:hover i {
+    transform: scale(1.15) rotate(-10deg);
+}
+
 .final-display {
     text-align: center;
     background: rgba(99, 102, 241, 0.2);
@@ -461,7 +501,7 @@ select:focus, input:focus {
         font-size: 14px; /* Increase size for readability */
     }
 
-    .background-blobs, .header-actions, .settings-modal, .btn-primary, #theme-toggle {
+    .background-blobs, .header-actions, .settings-modal, .btn-primary, #theme-toggle, .btn-calculate {
         display: none !important;
     }
 
