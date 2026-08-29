@@ -810,6 +810,12 @@ select:focus, input:focus {
     border-color: rgba(168, 85, 247, 0.3);
 }
 
+.guide-badge.blue {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
 .guide-section h3 {
     font-size: 0.98rem;
     font-weight: 700;
