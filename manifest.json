@@ -1,6 +1,6 @@
 {
-  "name": "서울시 학교 체육관 사용료 산정기",
-  "short_name": "체육관산정기",
+  "name": "서울특별시교육청 학교 체육관 사용료 계산기",
+  "short_name": "체육관계산기",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
