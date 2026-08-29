@@ -418,42 +418,44 @@
         </div>
     </div>
 
-    <!-- Modal remains similar -->
+    <!-- Settings Modal -->
     <div id="settings-modal" class="modal">
         <div class="modal-content card">
             <div class="modal-header">
-                <h2>단가 설정</h2>
-                <button class="close-modal">&times;</button>
+                <h2>단가 설정 (조례 기본값)</h2>
+                <button class="close-modal" id="btn-close-settings">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="input-group">
-                    <label>규모별 시간당 사용료 (원)</label>
+                    <label>체육관 규모별 시간당 사용료 (원)</label>
                     <div class="rate-grid">
                         <div class="sub-input">
-                            <label>500㎡ 미만</label>
-                            <input type="number" id="set-rate-small" value="10000">
+                            <label>360㎡ 미만</label>
+                            <input type="number" id="set-rate-small" value="15000" step="1000">
                         </div>
                         <div class="sub-input">
-                            <label>500~1,000㎡</label>
-                            <input type="number" id="set-rate-medium" value="15000">
+                            <label>360~720㎡</label>
+                            <input type="number" id="set-rate-medium" value="20000" step="1000">
                         </div>
                         <div class="sub-input">
-                            <label>1,000㎡ 이상</label>
-                            <input type="number" id="set-rate-large" value="20000">
+                            <label>720㎡ 이상</label>
+                            <input type="number" id="set-rate-large" value="30000" step="1000">
                         </div>
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>조명 시간당 요금</label>
-                    <input type="number" id="set-light-rate" value="5000">
+                    <label>조명 시설 시간당 요금 (원)</label>
+                    <input type="number" id="set-light-rate" value="5000" step="1000">
                 </div>
                 <div class="input-group">
-                    <label>냉난방 시간당 요금</label>
-                    <input type="number" id="set-hvac-rate" value="5000">
+                    <label>냉·난방기 사용료 산정 기준</label>
+                    <div style="font-size: 0.82rem; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 0.7rem; border-radius: 8px; border: 1px solid var(--card-border);">
+                        ※ 조례 제7조에 의거 <strong>기본 대관료 시간당 단가의 20%</strong>가 자동 가산됩니다.
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="btn-save-settings" class="btn btn-primary">저장하기</button>
+                <button id="btn-save-settings" class="btn btn-primary">설정 저장</button>
             </div>
         </div>
     </div>

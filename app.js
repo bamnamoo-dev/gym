@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const state = {
         mode: 'short', 
         rates: {
-            sports: { small: 15000, medium: 20000, large: 25000 },
-            event: { small: 40000, medium: 50000, large: 60000 }
+            sports: { small: 15000, medium: 20000, large: 30000 },
+            event: { small: 30000, medium: 40000, large: 60000 }
         },
         lightRate: 5000,
         size: 'medium',

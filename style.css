@@ -789,8 +789,11 @@ select:focus, input:focus {
 
     .background-blobs, 
     .header-actions, 
-    .settings-modal, 
+    .modal,
+    #guide-modal,
+    #settings-modal, 
     .btn-primary, 
+    .btn-guide,
     #theme-toggle, 
     .btn-holiday-info,
     .holiday-pop-box,
