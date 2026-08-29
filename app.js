@@ -454,7 +454,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const allowedDays = state.mode === 'long' ? state.selectedDays : [0,1,2,3,4,5,6];
         const rawSessionDates = getSessionDates(state.startDate, state.endDate, allowedDays, state.excludeHolidays);
         
-        const parseExcluded = (str) => str.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        const parseExcluded = (str) => {
+            if (!str) return [];
+            return str.split(',').map(s => {
+                let clean = s.trim().replace(/\./g, '-').replace(/\//g, '-');
+                if (/^\d{8}$/.test(clean)) {
+                    return `${clean.slice(0, 4)}-${clean.slice(4, 6)}-${clean.slice(6)}`;
+                }
+                const parts = clean.split('-');
+                if (parts.length === 3) {
+                    const y = parts[0];
+                    const m = parts[1].padStart(2, '0');
+                    const d = parts[2].padStart(2, '0');
+                    return `${y}-${m}-${d}`;
+                }
+                return clean;
+            }).filter(s => s.length > 0);
+        };
         const baseExcludes = parseExcluded(state.baseExcludeDates);
         const sessionDates = rawSessionDates.filter(d => !baseExcludes.includes(d));
         const totalSessions = Math.max(0, sessionDates.length + state.baseAdjDays);
