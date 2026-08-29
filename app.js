@@ -484,28 +484,54 @@ document.addEventListener('DOMContentLoaded', () => {
         const parseExcluded = (str) => {
             if (!str) return [];
             return str.split(',').map(s => {
-                let clean = s.trim().replace(/\./g, '-').replace(/\//g, '-');
-                if (/^\d{8}$/.test(clean)) {
-                    return `${clean.slice(0, 4)}-${clean.slice(4, 6)}-${clean.slice(6)}`;
+                const raw = s.trim();
+                if (!raw) return null;
+
+                let reason = '';
+                const matchParen = raw.match(/\((.*?)\)/);
+                if (matchParen) {
+                    reason = matchParen[1].trim();
+                } else if (raw.includes(':')) {
+                    const colonParts = raw.split(':');
+                    reason = colonParts.slice(1).join(':').trim();
                 }
-                const parts = clean.split('-');
-                if (parts.length === 3) {
-                    const y = parts[0];
-                    const m = parts[1].padStart(2, '0');
-                    const d = parts[2].padStart(2, '0');
-                    return `${y}-${m}-${d}`;
+
+                let datePart = raw.replace(/\(.*?\)/g, '').split(':')[0].trim().replace(/\./g, '-').replace(/\//g, '-');
+                let formattedDate = '';
+                const pureDigits = datePart.replace(/\D/g, '');
+                if (pureDigits.length === 8) {
+                    formattedDate = `${pureDigits.slice(0, 4)}-${pureDigits.slice(4, 6)}-${pureDigits.slice(6)}`;
+                } else {
+                    const parts = datePart.split('-');
+                    if (parts.length === 3) {
+                        const y = parts[0];
+                        const m = parts[1].padStart(2, '0');
+                        const d = parts[2].padStart(2, '0');
+                        formattedDate = `${y}-${m}-${d}`;
+                    } else {
+                        formattedDate = datePart;
+                    }
                 }
-                return clean;
-            }).filter(s => s.length > 0);
+
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(formattedDate)) return null;
+
+                return {
+                    date: formattedDate,
+                    reason: reason,
+                    display: reason ? `${formattedDate}(${reason})` : formattedDate
+                };
+            }).filter(it => it !== null);
         };
-        const baseExcludes = parseExcluded(state.baseExcludeDates);
-        const sessionDates = rawSessionDates.filter(d => !baseExcludes.includes(d));
+        const baseExcludesList = parseExcluded(state.baseExcludeDates);
+        const baseExcludesDates = baseExcludesList.map(it => it.date);
+        const sessionDates = rawSessionDates.filter(d => !baseExcludesDates.includes(d));
         const totalSessions = Math.max(0, sessionDates.length + state.baseAdjDays);
         
         const calcFacSessions = (use, start, end, excludeStr, adjDays) => {
             if (!use) return 0;
-            const excludes = parseExcluded(excludeStr);
-            const count = sessionDates.filter(d => isWithinRange(d, start, end) && !excludes.includes(d)).length;
+            const excludesList = parseExcluded(excludeStr);
+            const excludesDates = excludesList.map(it => it.date);
+            const count = sessionDates.filter(d => isWithinRange(d, start, end) && !excludesDates.includes(d)).length;
             return Math.max(0, count + adjDays);
         };
 
@@ -574,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Excluded days breakdown (Holidays + Additional Excludes + Adj Days)
         const hCount = holidaysInRange.length;
-        const validBaseExcludes = rawSessionDates.filter(d => baseExcludes.includes(d));
+        const validBaseExcludes = baseExcludesList.filter(it => rawSessionDates.includes(it.date));
         const eCount = validBaseExcludes.length;
         const adjDays = state.baseAdjDays;
 
@@ -606,7 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let html = '';
             html += `<div class="pop-block"><strong>🏛️ 관공서 공휴일 (${hCount}일 ${state.excludeHolidays ? '제외' : '미제외'}):</strong><p>${hCount > 0 ? holidaysInRange.join(', ') : '선택 요일에 해당하는 공휴일 없음'}</p></div>`;
             if (eCount > 0) {
-                html += `<div class="pop-block" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.15);"><strong>✏️ 추가 제외 일자 (${eCount}일 제외):</strong><p>${validBaseExcludes.join(', ')}</p></div>`;
+                html += `<div class="pop-block" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.15);"><strong>✏️ 추가 제외 일자 (${eCount}일 제외):</strong><p>${validBaseExcludes.map(it => it.display).join(', ')}</p></div>`;
             }
             if (adjDays !== 0) {
                 html += `<div class="pop-block" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.15);"><strong>🔢 일수 가감 (+/-):</strong><p>${adjDays > 0 ? '+' : ''}${adjDays}일 조정</p></div>`;
