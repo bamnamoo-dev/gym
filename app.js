@@ -43,6 +43,51 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
+     * Date Helpers & Input Masking
+     */
+    function isValidDate(str) {
+        if (!str || typeof str !== 'string' || str.length !== 10) return false;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false;
+        const [y, m, d] = str.split('-').map(Number);
+        if (y < 2000 || y > 2099 || m < 1 || m > 12 || d < 1 || d > 31) return false;
+        const dt = new Date(y, m - 1, d);
+        return dt.getFullYear() === y && dt.getMonth() + 1 === m && dt.getDate() === d;
+    }
+
+    function formatAutoDate(raw) {
+        if (!raw) return '';
+        const digits = raw.replace(/\D/g, '').slice(0, 8);
+        if (digits.length <= 4) {
+            return digits;
+        } else if (digits.length <= 6) {
+            return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+        } else {
+            return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
+        }
+    }
+
+    function setupDateMask(input, onChange) {
+        if (!input) return;
+        input.addEventListener('input', () => {
+            const oldVal = input.value;
+            const formatted = formatAutoDate(oldVal);
+            if (oldVal !== formatted) {
+                input.value = formatted;
+            }
+            if (isValidDate(formatted)) {
+                onChange(formatted);
+            }
+        });
+        input.addEventListener('change', () => {
+            const formatted = formatAutoDate(input.value);
+            input.value = formatted;
+            if (isValidDate(formatted)) {
+                onChange(formatted);
+            }
+        });
+    }
+
+    /**
      * Korea Astronomy and Space Science Institute (KASI) OpenAPI Key
      */
     const KASI_SERVICE_KEY = 'b113563a7b1c40fb60e0a94a853920c7bb87ff909735da575821a42e2de9e065';
@@ -94,9 +139,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function ensureHolidaysForRange(startStr, endStr) {
-        if (!startStr) return;
-        const startYear = new Date(startStr).getFullYear();
-        const endYear = endStr ? new Date(endStr).getFullYear() : startYear;
+        if (!isValidDate(startStr) || !isValidDate(endStr)) return;
+        const startYear = parseInt(startStr.slice(0, 4), 10);
+        const endYear = parseInt(endStr.slice(0, 4), 10);
+        if (startYear < 2000 || startYear > 2099 || endYear < 2000 || endYear > 2099) return;
+        if (Math.abs(endYear - startYear) > 3) return;
+
         const promises = [];
         for (let y = Math.min(startYear, endYear); y <= Math.max(startYear, endYear); y++) {
             if (!loadedYears.has(y)) {
@@ -274,13 +322,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUI();
     });
 
-    if (startDateInput) startDateInput.addEventListener('change', (e) => { 
-        state.startDate = e.target.value; 
+    setupDateMask(startDateInput, (val) => { 
+        state.startDate = val; 
         ensureHolidaysForRange(state.startDate, state.endDate);
         updateUI(); 
     });
-    if (endDateInput) endDateInput.addEventListener('change', (e) => { 
-        state.endDate = e.target.value; 
+    setupDateMask(endDateInput, (val) => { 
+        state.endDate = val; 
         ensureHolidaysForRange(state.startDate, state.endDate);
         updateUI(); 
     });
@@ -301,8 +349,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (detailsEl) detailsEl.classList.toggle('hidden', !e.target.checked);
             updateUI();
         });
-        if (startEl) startEl.addEventListener('change', (e) => { state[`${key}Start`] = e.target.value; updateUI(); });
-        if (endEl) endEl.addEventListener('change', (e) => { state[`${key}End`] = e.target.value; updateUI(); });
+        setupDateMask(startEl, (val) => { state[`${key}Start`] = val; updateUI(); });
+        setupDateMask(endEl, (val) => { state[`${key}End`] = val; updateUI(); });
         if (hoursEl) hoursEl.addEventListener('input', (e) => { state[`${key}Hours`] = parseInt(e.target.value) || 0; updateUI(); });
         if (excludeEl) excludeEl.addEventListener('input', (e) => { state[`${key}ExcludeDates`] = e.target.value; updateUI(); });
         if (adjEl) adjEl.addEventListener('input', (e) => { state[`${key}AdjDays`] = parseInt(e.target.value) || 0; updateUI(); });
@@ -533,12 +581,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getSessionDates(start, end, allowedDays, skipHolidays) {
-        if (!start || !end || allowedDays.length === 0) return [];
+        if (!isValidDate(start) || !isValidDate(end) || allowedDays.length === 0) return [];
+        if (start > end) return [];
+
+        const [sY, sM, sD] = start.split('-').map(Number);
+        const [eY, eM, eD] = end.split('-').map(Number);
+        const cur = new Date(sY, sM - 1, sD);
+        const last = new Date(eY, eM - 1, eD);
+
+        // Safety limit: max 3 years (1100 days) to prevent any runaway loops
+        if ((last.getTime() - cur.getTime()) > 1200 * 86400000) return [];
+
         const dates = [];
-        const cur = new Date(start);
-        const last = new Date(end);
         while (cur <= last) {
-            const dateStr = cur.toISOString().split('T')[0];
+            const y = cur.getFullYear();
+            const m = String(cur.getMonth() + 1).padStart(2, '0');
+            const d = String(cur.getDate()).padStart(2, '0');
+            const dateStr = `${y}-${m}-${d}`;
             const isAllowedDay = allowedDays.includes(cur.getDay());
             if (isAllowedDay && !(skipHolidays && isHoliday(dateStr))) dates.push(dateStr);
             cur.setDate(cur.getDate() + 1);
