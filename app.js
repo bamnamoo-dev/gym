@@ -773,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function numberToKorean(number) {
-        if (!number || number === 0) return '금 영원정';
+        if (!number || number === 0) return '영원';
         const units = ['', '만', '억', '조'];
         const digits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
         const subUnits = ['', '십', '백', '천'];
@@ -794,11 +794,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             if (chunkStr) {
-                result = chunkStr + units[unitIdx] + ' ' + result;
+                result = chunkStr + units[unitIdx] + result;
             }
             unitIdx++;
         }
-        return '금 ' + result.trim() + '원정';
+        return result.trim() + '원';
     }
 
     function setText(el, val) { if (el) el.textContent = val; }

@@ -1134,11 +1134,18 @@ select:focus, input:focus {
 
     .total-cell {
         font-size: 13.5px !important;
+        color: #0f172a !important;
+    }
+
+    .total-won-num {
+        font-size: 14.5px !important;
+        font-weight: 800 !important;
         color: #1e3a8a !important;
     }
 
-    .total-cell .total-num {
-        font-size: 12px !important;
+    .total-cell .total-korean {
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
         color: #2563eb !important;
         margin-left: 5px;
     }
