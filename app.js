@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // State
     const state = {
         mode: 'short', 
+        schoolName: '서울행정초등학교',
         rates: {
             sports: { small: 15000, medium: 20000, large: 30000 },
             event: { small: 30000, medium: 40000, large: 60000 }
@@ -218,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnLong = $('mode-long');
     const weekdayContainer = $('weekday-selection-container');
     const dateLabel = $('date-label');
+    const schoolNameInput = $('school-name');
     const startDateInput = $('start-date');
     const endDateInput = $('end-date');
     const btnQuick1Year = $('btn-quick-1year');
@@ -471,6 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFacility('cooling', useCoolingCheck, coolingDetails, coolingStartInput, coolingEndInput, coolingHoursInput, coolingExcludeDatesInput);
     setupFacility('heating', useHeatingCheck, heatingDetails, heatingStartInput, heatingEndInput, heatingHoursInput, heatingExcludeDatesInput);
 
+    if (schoolNameInput) schoolNameInput.addEventListener('input', (e) => { state.schoolName = e.target.value; updateUI(); });
     if (gymSizeSelect) gymSizeSelect.addEventListener('change', (e) => { state.size = e.target.value; updateUI(); });
     if (gymPurposeSelect) gymPurposeSelect.addEventListener('change', (e) => { state.purpose = e.target.value; updateUI(); });
     if (durationInput) durationInput.addEventListener('input', (e) => {
@@ -698,6 +701,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateStrKr = `${now.getFullYear()}년 ${String(now.getMonth() + 1).padStart(2, '0')}월 ${String(now.getDate()).padStart(2, '0')}일`;
         setText($('print-issue-date'), dateStrKr);
         setText($('print-sign-date'), dateStrKr);
+
+        const sName = (state.schoolName && state.schoolName.trim()) ? state.schoolName.trim() : '서울행정초등학교';
+        setText($('print-school-title'), sName);
+        setText($('print-school-principal'), `${sName}장`);
 
         const sizeLabel = state.size === 'small' ? '360㎡ 미만' : state.size === 'large' ? '720㎡ 이상' : '360㎡ 이상 ~ 720㎡ 미만';
         setText($('print-gym-size'), sizeLabel);

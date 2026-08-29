@@ -52,12 +52,24 @@
                         <button id="mode-long" class="btn-mode">장기</button>
                     </div>
 
-                    <div class="input-group">
+                    <div class="input-group" style="margin-bottom: 0.75rem;">
+                        <label for="school-name">학교명 (인쇄 서식용)</label>
+                        <input type="text" id="school-name" value="서울행정초등학교" placeholder="예: 서울행정초등학교">
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 0.75rem;">
                         <div class="label-with-btn">
                             <label id="date-label">대관 기간</label>
-                            <button type="button" id="btn-quick-1year" class="btn-quick-fill" title="당해학년도(3월~익년2월) 1년 및 표준 냉·난방(냉방 6~8월, 난방 11~2월)을 원클릭으로 자동 세팅합니다">
-                                <i class="fas fa-bolt"></i> 1년 자동세팅
-                            </button>
+                            <div class="date-header-actions">
+                                <button type="button" id="btn-quick-1year" class="btn-quick-fill" title="당해학년도(3월~익년2월) 1년 및 표준 냉·난방을 자동 세팅합니다">
+                                    <i class="fas fa-bolt"></i> 1년 세팅
+                                </button>
+                                <label class="checkbox-container inline-holiday">
+                                    <input type="checkbox" id="exclude-holidays">
+                                    <span class="checkmark"></span>
+                                    <span class="label-text">공휴일 제외</span>
+                                </label>
+                            </div>
                         </div>
                         <div class="date-range-grid">
                             <div class="date-input-wrap">
@@ -74,7 +86,7 @@
                         </div>
                     </div>
 
-                    <div id="weekday-selection-container" class="hidden">
+                    <div id="weekday-selection-container" class="hidden" style="margin-bottom: 0.75rem;">
                         <label>사용 요일</label>
                         <div class="weekday-picker compact">
                             <label class="day-check"><input type="checkbox" value="1"><span>월</span></label>
@@ -87,37 +99,30 @@
                         </div>
                     </div>
 
-                    <div class="holiday-toggle mini">
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="exclude-holidays">
-                            <span class="checkmark"></span>
-                            <span class="label-text">공휴일 자동 제외</span>
-                        </label>
-                    </div>
-
-                    <div class="input-group">
+                    <div class="input-group" style="margin-bottom: 0.75rem;">
                         <label>추가 제외 일자</label>
                         <input type="text" id="base-exclude-dates" placeholder="예: 2026-05-01(개교기념일), 2026-07-20(바닥공사)">
                     </div>
 
-                    <div class="input-group">
-                        <label for="gym-size">체육관 규모</label>
-                        <select id="gym-size">
-                            <option value="small">360㎡ 미만</option>
-                            <option value="medium" selected>360㎡ 이상 ~ 720㎡ 미만</option>
-                            <option value="large">720㎡ 이상</option>
-                        </select>
+                    <div class="two-col-grid">
+                        <div class="input-group">
+                            <label for="gym-size">체육관 규모</label>
+                            <select id="gym-size">
+                                <option value="small">360㎡ 미만</option>
+                                <option value="medium" selected>360~720㎡</option>
+                                <option value="large">720㎡ 이상</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="gym-purpose">대관 목적</label>
+                            <select id="gym-purpose">
+                                <option value="sports" selected>체육활동 (기본)</option>
+                                <option value="event">행사목적 (전용)</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="gym-purpose">대관 목적 (조례 용도별 단가)</label>
-                        <select id="gym-purpose">
-                            <option value="sports" selected>기본 체육활동 (일반 동호회·주민 운동)</option>
-                            <option value="event">전용 행사목적 (체육대회·발표회·행사 대관)</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
+                    <div class="input-group" style="margin-bottom: 0.85rem;">
                         <label>1회 사용 시간: <span id="duration-val">2시간</span></label>
                         <input type="range" id="duration" min="1" max="12" step="1" value="2">
                     </div>
@@ -308,7 +313,7 @@
     <div id="print-document" class="print-only">
         <div class="print-header">
             <div class="print-badge">서울특별시교육청 공문서 서식</div>
-            <h1>학교 시설(체육관) 사용료 산출 내역서</h1>
+            <h1><span id="print-school-title">서울행정초등학교</span> 시설(체육관) 사용료 산출 내역서</h1>
             <div class="print-meta-grid">
                 <div class="meta-item"><span>발행일자:</span> <strong id="print-issue-date">2026년 08월 30일</strong></div>
                 <div class="meta-item"><span>산정근거:</span> <strong>서울특별시립학교 시설개방 조례</strong></div>
@@ -429,7 +434,7 @@
             <div class="print-sign-area">
                 <div class="print-date" id="print-sign-date">2026년 08월 30일</div>
                 <div class="print-issuer">
-                    <span>서울특별시교육청 학교 체육관 대관 관리시스템</span>
+                    <span id="print-school-principal">서울행정초등학교장</span>
                     <span class="seal-mark">[직인생략]</span>
                 </div>
             </div>

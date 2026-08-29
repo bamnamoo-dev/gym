@@ -176,11 +176,43 @@ select:focus, input:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
 }
 
 .label-with-btn label {
     margin-bottom: 0 !important;
+}
+
+.date-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-container.inline-holiday {
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding-left: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+    position: relative;
+}
+
+.checkbox-container.inline-holiday .checkmark {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    top: 2px;
+}
+
+.checkbox-container.inline-holiday .checkmark:after {
+    left: 4px;
+    top: 1px;
+    width: 3px;
+    height: 7px;
 }
 
 .btn-quick-fill {
@@ -189,12 +221,12 @@ select:focus, input:focus {
     color: var(--primary);
     font-size: 0.72rem;
     font-weight: 600;
-    padding: 3px 8px;
+    padding: 2px 7px;
     border-radius: 6px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     transition: all 0.2s ease;
 }
 
@@ -214,6 +246,17 @@ select:focus, input:focus {
 [data-theme="light"] .btn-quick-fill:hover {
     background: var(--primary);
     color: #ffffff;
+}
+
+.two-col-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+}
+
+.two-col-grid .input-group {
+    margin-bottom: 0 !important;
 }
 
 .date-range-grid {
