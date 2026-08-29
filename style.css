@@ -413,10 +413,45 @@ select:focus, input:focus {
     font-weight: normal;
     margin-left: 4px;
 }
+.holiday-info-card {
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    margin-top: 1.25rem;
+}
+
+[data-theme="light"] .holiday-info-card {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+.holiday-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+}
+
+.holiday-title {
+    color: var(--text-main);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.holiday-title i {
+    color: var(--primary);
+}
+
 .holiday-right-wrap {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.88rem;
 }
 
 .btn-holiday-info {
@@ -447,8 +482,8 @@ select:focus, input:focus {
     font-size: 0.73rem;
     color: var(--text-muted);
     line-height: 1.4;
-    margin-top: -0.2rem;
-    margin-bottom: 0.6rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0;
     word-break: keep-all;
     max-height: 100px;
     overflow-y: auto;
@@ -459,8 +494,6 @@ select:focus, input:focus {
     border-color: #cbd5e1;
     color: #475569;
 }
-
-#holiday-row { color: var(--primary); }
 
 .divider { height: 1px; background: var(--card-border); margin: 0.75rem 0; }
 

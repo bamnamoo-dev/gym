@@ -110,6 +110,19 @@
                         <label>1회 사용 시간: <span id="duration-val">2시간</span></label>
                         <input type="range" id="duration" min="1" max="12" step="1" value="2">
                     </div>
+
+                    <div class="holiday-info-card" id="col1-holiday-section">
+                        <div class="holiday-info-header">
+                            <span class="holiday-title"><i class="far fa-calendar-check"></i> 사용기간 중 공휴일</span>
+                            <div class="holiday-right-wrap">
+                                <span id="res-holiday-count">0일 제외</span>
+                                <button type="button" id="btn-toggle-holidays" class="btn-holiday-info hidden" title="공휴일 목록 보기">
+                                    <i class="fas fa-list-ul"></i> 목록
+                                </button>
+                            </div>
+                        </div>
+                        <div class="holiday-pop-box hidden" id="holiday-math">해당 요일 공휴일 없음</div>
+                    </div>
                 </div>
             </section>
 
@@ -289,17 +302,6 @@
                             <span id="res-heating">0원</span>
                         </div>
                         <div class="detail-math" id="heating-math">기본료 20% × 0시간 × 0회</div>
-
-                        <div class="detail-row" id="holiday-row">
-                            <span class="detail-label">사용기간 중 공휴일</span>
-                            <div class="holiday-right-wrap">
-                                <span id="res-holiday-count">0일 제외</span>
-                                <button type="button" id="btn-toggle-holidays" class="btn-holiday-info hidden" title="공휴일 목록 보기">
-                                    <i class="fas fa-list-ul"></i> 목록
-                                </button>
-                            </div>
-                        </div>
-                        <div class="holiday-pop-box hidden" id="holiday-math">해당 요일 공휴일 없음</div>
 
                         <div class="divider"></div>
 
