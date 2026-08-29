@@ -259,7 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const heatingRow = $('heating-row');
     const resHeating = $('res-heating');
     const heatingMath = $('heating-math');
-    const holidayRow = $('holiday-row');
     const resHolidayCount = $('res-holiday-count');
     const holidayMath = $('holiday-math');
     const btnToggleHolidays = $('btn-toggle-holidays');
