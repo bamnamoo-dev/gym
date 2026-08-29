@@ -399,18 +399,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (startDateInput) startDateInput.value = state.startDate;
             if (endDateInput) endDateInput.value = state.endDate;
 
-            // 3. Set Weekdays (선택된 요일이 없으면 토·일 기본 선택)
-            const checkedDays = Array.from(weekdayChecks).filter(c => c.checked);
-            if (checkedDays.length === 0) {
-                weekdayChecks.forEach(check => {
-                    if (check.value === '6' || check.value === '0') {
-                        check.checked = true;
-                    }
-                });
-                state.selectedDays = [6, 0];
-            } else {
-                state.selectedDays = checkedDays.map(c => parseInt(c.value));
-            }
+            // 3. Set Weekdays (월·화·수·목·금 평일 전체 자동 선택)
+            weekdayChecks.forEach(check => {
+                const val = parseInt(check.value);
+                check.checked = [1, 2, 3, 4, 5].includes(val);
+            });
+            state.selectedDays = [1, 2, 3, 4, 5];
 
             // 4. Default Duration 2 Hours
             state.duration = 2;
