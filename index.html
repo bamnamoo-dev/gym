@@ -145,6 +145,11 @@
                         </select>
                     </div>
 
+                    <div class="facility-sync-notice">
+                        <i class="fas fa-check-circle"></i>
+                        <span>기본 대관의 <strong>공휴일 및 제외일자</strong>는 부대시설(냉난방/조명)에서도 <strong>자동 제외</strong>됩니다.</span>
+                    </div>
+
                     <div class="hvac-box">
                         <div class="facility-item">
                             <label class="checkbox-container main-toggle">
@@ -173,7 +178,7 @@
                                 <span>시간</span>
                             </div>
                             <div class="panel-row full">
-                                <label class="sub-label">추가 제외 일자 / 가감 일수 (+/-)</label>
+                                <label class="sub-label">조명 단독 제외 일자 / 가감 일수 (+/-)</label>
                                 <div class="adj-grid">
                                     <input type="text" id="light-exclude-dates" placeholder="예: 2026-05-01, 2026-06-05">
                                     <input type="number" id="light-adj-days" value="0" step="1">
@@ -210,7 +215,7 @@
                                 <span>시간</span>
                             </div>
                             <div class="panel-row full">
-                                <label class="sub-label">추가 제외 일자 / 가감 일수 (+/-)</label>
+                                <label class="sub-label">냉방 단독 제외 일자 / 가감 일수 (+/-)</label>
                                 <div class="adj-grid">
                                     <input type="text" id="cooling-exclude-dates" placeholder="예: 2026-07-15, 2026-08-01">
                                     <input type="number" id="cooling-adj-days" value="0" step="1">
@@ -247,7 +252,7 @@
                                 <span>시간</span>
                             </div>
                             <div class="panel-row full">
-                                <label class="sub-label">추가 제외 일자 / 가감 일수 (+/-)</label>
+                                <label class="sub-label">난방 단독 제외 일자 / 가감 일수 (+/-)</label>
                                 <div class="adj-grid">
                                     <input type="text" id="heating-exclude-dates" placeholder="예: 2026-12-24, 2027-01-05">
                                     <input type="number" id="heating-adj-days" value="0" step="1">
