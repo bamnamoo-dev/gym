@@ -284,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const holidayRow = $('holiday-row');
     const resHolidayCount = $('res-holiday-count');
     const holidayMath = $('holiday-math');
+    const btnToggleHolidays = $('btn-toggle-holidays');
     const resSubtotal = $('res-subtotal');
     const resDiscountLabel = $('res-discount-label');
     const resDiscount = $('res-discount');
@@ -298,6 +299,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSaveSettings = $('btn-save-settings');
     const btnPrint = $('btn-print');
     const btnCalculate = $('btn-calculate');
+
+    // Auto clear placeholder on focus, restore on blur
+    document.querySelectorAll('input[placeholder]').forEach(input => {
+        const originalPlaceholder = input.getAttribute('placeholder');
+        input.addEventListener('focus', () => {
+            input.setAttribute('placeholder', '');
+        });
+        input.addEventListener('blur', () => {
+            if (!input.value.trim()) {
+                input.setAttribute('placeholder', originalPlaceholder);
+            }
+        });
+    });
+
+    if (btnToggleHolidays && holidayMath) {
+        btnToggleHolidays.addEventListener('click', () => {
+            holidayMath.classList.toggle('hidden');
+            const isVisible = !holidayMath.classList.contains('hidden');
+            btnToggleHolidays.innerHTML = isVisible ? '<i class="fas fa-times"></i> 닫기' : '<i class="fas fa-list-ul"></i> 목록';
+        });
+    }
 
     // Initialization
     initDates();
@@ -549,15 +571,21 @@ document.addEventListener('DOMContentLoaded', () => {
             setText(resHolidayCount, `${holidaysInRange.length}일 제외`);
             if (holidaysInRange.length > 0) {
                 setText(holidayMath, holidaysInRange.join(', '));
+                updateVisibility(true, btnToggleHolidays);
             } else {
                 setText(holidayMath, '선택 요일에 해당하는 공휴일 없음');
+                updateVisibility(false, btnToggleHolidays);
+                updateVisibility(false, holidayMath);
             }
         } else {
             setText(resHolidayCount, `${holidaysInRange.length}일 (미제외)`);
             if (holidaysInRange.length > 0) {
                 setText(holidayMath, `${holidaysInRange.join(', ')} (사용일수에 포함됨)`);
+                updateVisibility(true, btnToggleHolidays);
             } else {
                 setText(holidayMath, '공휴일 없음');
+                updateVisibility(false, btnToggleHolidays);
+                updateVisibility(false, holidayMath);
             }
         }
 
