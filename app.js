@@ -298,7 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCloseModal = document.querySelector('.close-modal');
     const btnSaveSettings = $('btn-save-settings');
     const btnPrint = $('btn-print');
-    const btnCalculate = $('btn-calculate');
 
     // Auto clear placeholder on focus, restore on blur
     document.querySelectorAll('input[placeholder]').forEach(input => {
@@ -453,20 +452,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (btnPrint) btnPrint.addEventListener('click', () => { window.print(); });
-    
-    if (btnCalculate) {
-        btnCalculate.addEventListener('click', async () => {
-            const originalHtml = btnCalculate.innerHTML;
-            btnCalculate.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>계산 중...</span>';
-            btnCalculate.style.opacity = '0.85';
-            await ensureHolidaysForRange(state.startDate, state.endDate);
-            updateUI();
-            setTimeout(() => {
-                btnCalculate.innerHTML = originalHtml;
-                btnCalculate.style.opacity = '1';
-            }, 250);
-        });
-    }
 
     function updateUI() {
         const isEvent = state.category === 'none';
