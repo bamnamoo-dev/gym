@@ -883,11 +883,35 @@ select:focus, input:focus {
     margin-bottom: 0.35rem;
 }
 
+.guide-body {
+    padding: 1.25rem 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    word-break: keep-all;
+}
+
+.guide-lead {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    word-break: keep-all;
+}
+
 .guide-mini-card p {
     font-size: 0.76rem;
-    line-height: 1.45;
+    line-height: 1.5;
     color: var(--text-muted);
     margin: 0;
+    word-break: keep-all;
+}
+
+.bullet-text {
+    flex: 1;
+    word-break: keep-all;
+    line-height: 1.55;
 }
 
 .guide-bullet-list {
@@ -1086,6 +1110,7 @@ select:focus, input:focus {
         padding: 7px 10px !important;
         border: 1px solid #cbd5e1 !important;
         line-height: 1.45 !important;
+        word-break: keep-all !important;
     }
 
     .print-table th {
@@ -1093,6 +1118,7 @@ select:focus, input:focus {
         color: #1e293b !important;
         font-weight: 600 !important;
         text-align: center !important;
+        white-space: nowrap !important;
     }
 
     .print-table.calculation th {
@@ -1170,6 +1196,7 @@ select:focus, input:focus {
         font-size: 10px !important;
         line-height: 1.55 !important;
         color: #475569 !important;
+        word-break: keep-all !important;
     }
 
     .print-notice-list li {
@@ -1187,6 +1214,7 @@ select:focus, input:focus {
         font-weight: 500 !important;
         color: #334155 !important;
         margin: 0 0 12px 0 !important;
+        word-break: keep-all !important;
     }
 
     .print-sign-area {
