@@ -1,0 +1,8 @@
+{
+  "name": "서울시 학교 체육관 사용료 산정기",
+  "short_name": "체육관산정기",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a2e"
+}

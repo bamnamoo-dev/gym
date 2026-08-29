@@ -43,7 +43,74 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Lunar Holiday Database (2026-2035)
+     * Korea Astronomy and Space Science Institute (KASI) OpenAPI Key
+     */
+    const KASI_SERVICE_KEY = 'b113563a7b1c40fb60e0a94a853920c7bb87ff909735da575821a42e2de9e065';
+    const apiHolidays = {}; // Cache: { 'YYYY-MM-DD': 'Holiday Name' }
+    const loadedYears = new Set();
+
+    /**
+     * Fetch holidays from KASI OpenAPI with localStorage caching & fallback
+     */
+    async function fetchHolidaysForYear(year) {
+        if (loadedYears.has(year)) return;
+        const cacheKey = `kasi_holidays_${year}`;
+        const cached = localStorage.getItem(cacheKey);
+
+        if (cached) {
+            try {
+                const parsed = JSON.parse(cached);
+                Object.assign(apiHolidays, parsed);
+                loadedYears.add(year);
+                return;
+            } catch (e) {
+                console.error('Cache parsing error', e);
+            }
+        }
+
+        try {
+            const url = `https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${KASI_SERVICE_KEY}&solYear=${year}&_type=json&numOfRows=100`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+            const data = await res.json();
+            const items = data?.response?.body?.items?.item;
+            const list = Array.isArray(items) ? items : (items ? [items] : []);
+            
+            const yearHolidays = {};
+            list.forEach(item => {
+                if (item.isHoliday === 'Y') {
+                    const locdate = String(item.locdate);
+                    const formatted = `${locdate.slice(0, 4)}-${locdate.slice(4, 6)}-${locdate.slice(6, 8)}`;
+                    yearHolidays[formatted] = item.dateName;
+                    apiHolidays[formatted] = item.dateName;
+                }
+            });
+
+            localStorage.setItem(cacheKey, JSON.stringify(yearHolidays));
+            loadedYears.add(year);
+        } catch (err) {
+            console.warn(`Failed to fetch official holidays for ${year} via OpenAPI, falling back to built-in calendar logic:`, err);
+        }
+    }
+
+    async function ensureHolidaysForRange(startStr, endStr) {
+        if (!startStr) return;
+        const startYear = new Date(startStr).getFullYear();
+        const endYear = endStr ? new Date(endStr).getFullYear() : startYear;
+        const promises = [];
+        for (let y = Math.min(startYear, endYear); y <= Math.max(startYear, endYear); y++) {
+            if (!loadedYears.has(y)) {
+                promises.push(fetchHolidaysForYear(y));
+            }
+        }
+        if (promises.length > 0) {
+            await Promise.all(promises);
+            updateUI();
+        }
+    }
+
+    /**
+     * Lunar Holiday Database (2026-2035) Fallback
      * Includes Seollal (3 days), Chuseok (3 days), and Buddha's Birthday
      */
     const LUNAR_HOLIDAYS = {
@@ -119,9 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const heatingRow = $('heating-row');
     const resHeating = $('res-heating');
     const heatingMath = $('heating-math');
+    const holidayRow = $('holiday-row');
+    const resHolidayCount = $('res-holiday-count');
+    const holidayMath = $('holiday-math');
     const resSubtotal = $('res-subtotal');
     const resDiscountLabel = $('res-discount-label');
     const resDiscount = $('res-discount');
+    const hvacTotalRow = $('hvac-total-row');
+    const resHvacTotal = $('res-hvac-total');
     const resTotal = $('res-total');
     
     const themeToggle = $('theme-toggle');
@@ -135,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDates();
     loadSettings();
     applyTheme();
+    ensureHolidaysForRange(state.startDate, state.endDate);
     updateUI();
 
     function initDates() {
@@ -200,8 +273,16 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUI();
     });
 
-    if (startDateInput) startDateInput.addEventListener('change', (e) => { state.startDate = e.target.value; updateUI(); });
-    if (endDateInput) endDateInput.addEventListener('change', (e) => { state.endDate = e.target.value; updateUI(); });
+    if (startDateInput) startDateInput.addEventListener('change', (e) => { 
+        state.startDate = e.target.value; 
+        ensureHolidaysForRange(state.startDate, state.endDate);
+        updateUI(); 
+    });
+    if (endDateInput) endDateInput.addEventListener('change', (e) => { 
+        state.endDate = e.target.value; 
+        ensureHolidaysForRange(state.startDate, state.endDate);
+        updateUI(); 
+    });
     if (excludeHolidaysCheck) excludeHolidaysCheck.addEventListener('change', (e) => { state.excludeHolidays = e.target.checked; updateUI(); });
     if (baseExcludeDatesInput) baseExcludeDatesInput.addEventListener('input', (e) => { state.baseExcludeDates = e.target.value; updateUI(); });
     if (baseAdjDaysInput) baseAdjDaysInput.addEventListener('input', (e) => { state.baseAdjDays = parseInt(e.target.value) || 0; updateUI(); });
@@ -323,9 +404,51 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFacRow(state.useCooling, coolingRow, resCooling, coolingMath, coolingAmount, `기본료 20%(${formatNumber(hvacSurchargeRate)}원) × ${state.coolingHours}시간 × ${coolingSessions}${sessT}`);
         updateFacRow(state.useHeating, heatingRow, resHeating, heatingMath, heatingAmount, `기본료 20%(${formatNumber(hvacSurchargeRate)}원) × ${state.heatingHours}시간 × ${heatingSessions}${sessT}`);
 
+        // Holidays during period
+        const holidaysInRange = [];
+        if (state.startDate && state.endDate) {
+            const curH = new Date(state.startDate);
+            const lastH = new Date(state.endDate);
+            while (curH <= lastH) {
+                const dStr = curH.toISOString().split('T')[0];
+                if (allowedDays.includes(curH.getDay()) && isHoliday(dStr)) {
+                    const hName = apiHolidays[dStr] || '공휴일';
+                    const m = curH.getMonth() + 1;
+                    const d = curH.getDate();
+                    holidaysInRange.push(`${m}/${d}(${hName})`);
+                }
+                curH.setDate(curH.getDate() + 1);
+            }
+        }
+
+        if (state.excludeHolidays) {
+            setText(resHolidayCount, `${holidaysInRange.length}일 제외`);
+            if (holidaysInRange.length > 0) {
+                setText(holidayMath, holidaysInRange.join(', '));
+            } else {
+                setText(holidayMath, '선택 요일에 해당하는 공휴일 없음');
+            }
+        } else {
+            setText(resHolidayCount, `${holidaysInRange.length}일 (미제외)`);
+            if (holidaysInRange.length > 0) {
+                setText(holidayMath, `${holidaysInRange.join(', ')} (사용일수에 포함됨)`);
+            } else {
+                setText(holidayMath, '공휴일 없음');
+            }
+        }
+
         setText(resSubtotal, `${formatNumber(subtotal)}원`);
         setText(resDiscountLabel, `${Math.round(discountRate * 100)}%`);
         setText(resDiscount, `-${formatNumber(discountAmount)}원`);
+
+        // HVAC Total Row (Cooling + Heating)
+        const hvacTotal = coolingAmount + heatingAmount;
+        const showHvacTotal = state.useCooling || state.useHeating;
+        updateVisibility(showHvacTotal, hvacTotalRow);
+        if (showHvacTotal) {
+            setText(resHvacTotal, `${formatNumber(hvacTotal)}원`);
+        }
+
         animateNumber(resTotal, total);
         
         const resultBody = document.querySelector('.result-card .card-body');
@@ -338,6 +461,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function setText(el, val) { if (el) el.textContent = val; }
     
     function isHoliday(dateStr) {
+        // 0. Official KASI OpenAPI Holidays (includes temporary holidays, election days, official substitutes)
+        if (apiHolidays[dateStr]) return true;
+
         const date = new Date(dateStr);
         const year = date.getFullYear();
         const month = date.getMonth() + 1;

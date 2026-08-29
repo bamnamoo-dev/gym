@@ -3,8 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>서울시 학교 체육관 사용료 산정기 - 대시보드</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -254,6 +258,12 @@
                         </div>
                         <div class="detail-math" id="heating-math">기본료 20% × 0시간 × 0회</div>
 
+                        <div class="detail-row" id="holiday-row">
+                            <span class="detail-label">사용기간 중 공휴일</span>
+                            <span id="res-holiday-count">0일 제외</span>
+                        </div>
+                        <div class="detail-math" id="holiday-math">해당 요일 공휴일 없음</div>
+
                         <div class="divider"></div>
 
                         <div class="detail-row subtotal">
@@ -265,6 +275,10 @@
                                     style="font-size: 0.85em; color: var(--text-muted); font-weight: normal; margin-left: 5px;">(시설사용료는
                                     감액 미적용)</span></span>
                             <span id="res-discount">0원</span>
+                        </div>
+                        <div class="detail-row hvac-total" id="hvac-total-row">
+                            <span>냉난방 사용료 합계 <span class="sub-notice">(시설적립금에서 제외)</span></span>
+                            <span id="res-hvac-total">0원</span>
                         </div>
                     </div>
 
