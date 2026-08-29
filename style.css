@@ -534,6 +534,30 @@ select:focus, input:focus {
 
 .btn-icon:hover { background: var(--primary); transform: translateY(-2px); }
 
+.btn-guide {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 14px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    color: var(--primary);
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-guide:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
 .btn-primary {
     width: 100%;
     padding: 0.8rem;
@@ -560,6 +584,103 @@ select:focus, input:focus {
 .modal.active { display: flex; }
 .modal-content { width: 90%; max-width: 500px; }
 .modal-header { padding: 1.25rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; }
+.modal-body { padding: 1.25rem; }
+.modal-footer { padding: 1.25rem; border-top: 1px solid var(--card-border); }
+
+/* Guide Modal Specifics */
+.guide-modal-content {
+    max-width: 680px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.guide-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-main);
+}
+
+.guide-modal-title i {
+    color: var(--primary);
+}
+
+.guide-body {
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.guide-section {
+    background: rgba(15, 23, 42, 0.3);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 1.1rem;
+}
+
+[data-theme="light"] .guide-section {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+.guide-section h3 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.guide-section h3 i {
+    color: var(--primary);
+}
+
+.guide-lead {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--text-main);
+    margin-bottom: 0.8rem;
+}
+
+.guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    text-align: center;
+}
+
+.guide-table th, .guide-table td {
+    padding: 8px 10px;
+    border: 1px solid var(--card-border);
+}
+
+.guide-table th {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.guide-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-size: 0.84rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.guide-list li {
+    margin-bottom: 0.4rem;
+}
+
+.guide-list li strong {
+    color: var(--text-main);
+}
 .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
 
 /* Responsive */

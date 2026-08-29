@@ -451,7 +451,27 @@ document.addEventListener('DOMContentLoaded', () => {
         saveSettings(); updateUI(); if (modal) modal.classList.remove('active');
     });
 
+    const btnGuide = $('btn-guide');
+    const guideModal = $('guide-modal');
+    const btnCloseGuide = $('btn-close-guide');
+    const btnGuideOk = $('btn-guide-ok');
+
+    if (btnGuide && guideModal) {
+        btnGuide.addEventListener('click', () => guideModal.classList.add('active'));
+    }
+    if (btnCloseGuide && guideModal) {
+        btnCloseGuide.addEventListener('click', () => guideModal.classList.remove('active'));
+    }
+    if (btnGuideOk && guideModal) {
+        btnGuideOk.addEventListener('click', () => guideModal.classList.remove('active'));
+    }
+
     if (btnPrint) btnPrint.addEventListener('click', () => { window.print(); });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+        if (e.target === guideModal) guideModal.classList.remove('active');
+    });
 
     function updateUI() {
         const isEvent = state.category === 'none';

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>서울시 학교 체육관 사용료 산정기 - 대시보드</title>
+    <title>서울특별시교육청 학교 체육관 사용료 산정기</title>
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -29,9 +29,10 @@
         <header class="app-header compact">
             <div class="logo">
                 <i class="fas fa-school"></i>
-                <h1>서울시 학교 체육관 <span>사용료 산정기</span></h1>
+                <h1>서울특별시교육청 학교 체육관 <span>사용료 산정기</span></h1>
             </div>
             <div class="header-actions">
+                <button id="btn-guide" class="btn-guide" title="사용 설명서 및 산정 근거"><i class="fas fa-book-open"></i> <span>사용 설명서</span></button>
                 <button id="theme-toggle" class="btn-icon" title="테마 변경"><i class="fas fa-moon"></i></button>
                 <button id="btn-settings" class="btn-icon" title="단가 설정"><i class="fas fa-cog"></i></button>
                 <button id="btn-print" class="btn-icon" title="출력"><i class="fas fa-print"></i></button>
@@ -335,6 +336,81 @@
             </section>
         </div>
     </main>
+
+    <!-- User Guide Modal -->
+    <div id="guide-modal" class="modal">
+        <div class="modal-content card guide-modal-content">
+            <div class="modal-header">
+                <div class="guide-modal-title">
+                    <i class="fas fa-book-open"></i>
+                    <h2>사용 설명서 및 산정 근거</h2>
+                </div>
+                <button class="close-modal" id="btn-close-guide">&times;</button>
+            </div>
+            <div class="modal-body guide-body">
+                <div class="guide-section">
+                    <h3><i class="fas fa-gavel"></i> 1. 법적 근거 및 조례 기준</h3>
+                    <p class="guide-lead">본 산정기는 <strong>「서울특별시립학교 시설의 개방 및 주민이용에 관한 조례」</strong>(서울특별시조례) 및 시행규칙의 시설 사용료 산정 기준을 준수합니다.</p>
+                    <table class="guide-table">
+                        <thead>
+                            <tr>
+                                <th>구분</th>
+                                <th>360㎡ 미만</th>
+                                <th>360㎡ ~ 720㎡</th>
+                                <th>720㎡ 이상</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>체육활동 (시간당)</td>
+                                <td>15,000원</td>
+                                <td>20,000원</td>
+                                <td>30,000원</td>
+                            </tr>
+                            <tr>
+                                <td>행사목적 (시간당)</td>
+                                <td>30,000원</td>
+                                <td>40,000원</td>
+                                <td>60,000원</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="guide-section">
+                    <h3><i class="fas fa-satellite-dish"></i> 2. 공휴일 자동 연동 (한국천문연구원 특일 정보)</h3>
+                    <p>본 산정기는 <strong>공공데이터포털의 한국천문연구원(KASI) 특일 정보 OpenAPI</strong>를 실시간으로 직접 연동하여 공휴일을 판정합니다.</p>
+                    <ul class="guide-list">
+                        <li><strong>법정 공휴일 자동 인식</strong>: 신정, 삼일절, 어린이날, 현충일, 광복절, 개천절, 한글날, 성탄절 등 관공서 공휴일</li>
+                        <li><strong>명절 및 대체공휴일</strong>: 설날/추석 3일 연휴, 부처님오신날, 일요일 및 공휴일 겹침에 따른 <strong>법정 대체공휴일</strong> 자동 산출</li>
+                        <li><strong>선거일 및 임시공휴일</strong>: 제9회 전국동시지방선거(2026.6.3) 등 정부 지정 공휴일 자동 포함</li>
+                    </ul>
+                </div>
+
+                <div class="guide-section">
+                    <h3><i class="fas fa-fan"></i> 3. 냉·난방기 및 조례 감면 적용 규칙</h3>
+                    <ul class="guide-list">
+                        <li><strong>냉·난방기 사용료</strong>: 조례 제7조에 의거 <strong>기본 대관료(시간당 단가)의 20%를 가산</strong>하여 산출합니다. (예: 20,000원 체육관 기준 시간당 4,000원)</li>
+                        <li><strong>시설적립금 제외</strong>: 냉·난방비는 전기·가스 실사용료이므로 시설적립금에서 제외되어 분리 표기됩니다.</li>
+                        <li><strong>감면 혜택</strong>: 지역주민 6개월+(60%), 배려대상(50%), 지역직장인(40%), 공식행사(100%) 감면 지원</li>
+                        <li><strong>감면 적용 범위</strong>: 조례 원칙에 따라 감면은 <strong>기본 대관료에만 적용</strong>되며 부대시설(냉난방/조명)은 감액되지 않습니다.</li>
+                    </ul>
+                </div>
+
+                <div class="guide-section">
+                    <h3><i class="fas fa-magic"></i> 4. 스마트 편의 기능</h3>
+                    <ul class="guide-list">
+                        <li><strong>스마트 날짜 마스킹</strong>: 숫자만 입력하면 년(`YYYY-`) &rarr; 월(`MM-`) &rarr; 일(`DD`)로 자동 이동하며 달력 팝업도 지원합니다.</li>
+                        <li><strong>유연한 제외일자 입력</strong>: `2026-05-01`, `2026.05.01`, `20260501` 등 쉼표(`,`) 구분 입력 지원</li>
+                        <li><strong>A4 규격 단면 인쇄</strong>: 인쇄 버튼 클릭 시 **A4 용지 1장 정중앙**에 세로 중앙 정렬된 공문서/견적서 서식으로 자동 출력됩니다.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-guide-ok">확인</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal remains similar -->
     <div id="settings-modal" class="modal">
