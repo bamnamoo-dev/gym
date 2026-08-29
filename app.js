@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Includes Seollal (3 days), Chuseok (3 days), and Buddha's Birthday
      */
     const LUNAR_HOLIDAYS = {
-        2026: ['2026-02-16', '2026-02-17', '2026-02-18', '2026-05-24', '2026-05-25', '2026-09-24', '2026-09-25', '2026-09-26'],
+        2026: ['2026-02-16', '2026-02-17', '2026-02-18', '2026-05-24', '2026-09-24', '2026-09-25', '2026-09-26'],
         2027: ['2027-02-06', '2027-02-07', '2027-02-08', '2027-05-13', '2027-09-14', '2027-09-15', '2027-09-16'],
         2028: ['2028-01-26', '2028-01-27', '2028-01-28', '2028-05-02', '2028-09-30', '2028-10-01', '2028-10-02'],
         2029: ['2029-02-12', '2029-02-13', '2029-02-14', '2029-05-20', '2029-09-21', '2029-09-22', '2029-09-23'],
@@ -598,58 +598,43 @@ document.addEventListener('DOMContentLoaded', () => {
     function setText(el, val) { if (el) el.textContent = val; }
     
     function isHoliday(dateStr) {
-        // 0. Official KASI OpenAPI Holidays (includes temporary holidays, election days, official substitutes)
-        if (apiHolidays[dateStr]) return true;
+        if (!dateStr) return false;
+        const year = parseInt(dateStr.slice(0, 4), 10);
 
+        // 0. If official KASI OpenAPI holidays are loaded for this year, strictly use them
+        if (loadedYears.has(year)) {
+            return !!apiHolidays[dateStr];
+        }
+
+        // Fallback when offline or not yet loaded
         const date = new Date(dateStr);
-        const year = date.getFullYear();
         const month = date.getMonth() + 1;
         const day = date.getDate();
-        const dayOfWeek = date.getDay(); // 0: Sun, 6: Sat
 
         // 1. Solar Fixed Holidays
         const solarHolidays = [
-            '01-01', '03-01', '05-05', '06-06', '08-15', '10-03', '10-09', '12-25'
+            '01-01', '03-01', '05-01', '05-05', '06-06', '07-17', '08-15', '10-03', '10-09', '12-25'
         ];
         const mmdd = `${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-        
         if (solarHolidays.includes(mmdd)) return true;
 
         // 2. Substitute Holidays for Solar (if Sat/Sun)
-        // Simplified: If solar holiday is Sunday, next Monday is holiday.
-        // If it's Saturday, some years/holidays have substitute (3.1, 8.15, 10.3, 10.9, 5.5).
         for (let h of solarHolidays) {
             const [hM, hD] = h.split('-').map(Number);
             const hDate = new Date(year, hM - 1, hD);
             const hDay = hDate.getDay();
             
-            if (hDay === 0) { // Sunday
+            if (hDay === 0) { // Sunday -> Next Monday
                 const subDate = new Date(year, hM - 1, hD + 1);
-                if (subDate.getTime() === date.getTime()) return true;
-            } else if (hDay === 6 && ['03-01', '05-05', '08-15', '10-03', '10-09'].includes(h)) { // Saturday
-                const subDate = new Date(year, hM - 1, hD + 2); // Next Monday
-                if (subDate.getTime() === date.getTime()) return true;
+                if (subDate.toISOString().split('T')[0] === dateStr) return true;
+            } else if (hDay === 6 && ['03-01', '05-05', '07-17', '08-15', '10-03', '10-09'].includes(h)) { // Saturday -> Next Monday
+                const subDate = new Date(year, hM - 1, hD + 2);
+                if (subDate.toISOString().split('T')[0] === dateStr) return true;
             }
         }
 
-        // 3. Lunar Holidays from Database (2026-2035)
+        // 3. Lunar Holidays (Seollal, Chuseok, Buddha's Birthday)
         if (LUNAR_HOLIDAYS[year] && LUNAR_HOLIDAYS[year].includes(dateStr)) return true;
-
-        // 4. Substitute for Lunar (if Sun)
-        if (LUNAR_HOLIDAYS[year]) {
-            for (let lH of LUNAR_HOLIDAYS[year]) {
-                const lHDate = new Date(lH);
-                if (lHDate.getDay() === 0) { // If any lunar holiday is Sunday
-                    const subDate = new Date(lHDate);
-                    subDate.setDate(subDate.getDate() + 1);
-                    // If the subDate itself is already a lunar holiday, push further
-                    while (LUNAR_HOLIDAYS[year].includes(subDate.toISOString().split('T')[0])) {
-                        subDate.setDate(subDate.getDate() + 1);
-                    }
-                    if (subDate.getTime() === date.getTime()) return true;
-                }
-            }
-        }
 
         return false;
     }
