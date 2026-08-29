@@ -233,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const weekdayChecks = document.querySelectorAll('.day-check input');
     const excludeHolidaysCheck = $('exclude-holidays');
     const baseExcludeDatesInput = $('base-exclude-dates');
-    const baseAdjDaysInput = $('base-adj-days');
     const gymSizeSelect = $('gym-size');
     const durationInput = $('duration');
     const durationVal = $('duration-val');
@@ -246,7 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightEndInput = $('light-end');
     const lightHoursInput = $('light-hours');
     const lightExcludeDatesInput = $('light-exclude-dates');
-    const lightAdjDaysInput = $('light-adj-days');
 
     const useCoolingCheck = $('use-cooling');
     const coolingDetails = $('cooling-details');
@@ -254,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const coolingEndInput = $('cooling-end');
     const coolingHoursInput = $('cooling-hours');
     const coolingExcludeDatesInput = $('cooling-exclude-dates');
-    const coolingAdjDaysInput = $('cooling-adj-days');
 
     const useHeatingCheck = $('use-heating');
     const heatingDetails = $('heating-details');
@@ -262,7 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const heatingEndInput = $('heating-end');
     const heatingHoursInput = $('heating-hours');
     const heatingExcludeDatesInput = $('heating-exclude-dates');
-    const heatingAdjDaysInput = $('heating-adj-days');
 
     // Result DOM
     const resSessionCount = $('res-session-count');
@@ -400,7 +396,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (excludeHolidaysCheck) excludeHolidaysCheck.addEventListener('change', (e) => { state.excludeHolidays = e.target.checked; updateUI(); });
     if (baseExcludeDatesInput) baseExcludeDatesInput.addEventListener('input', (e) => { state.baseExcludeDates = e.target.value; updateUI(); });
-    if (baseAdjDaysInput) baseAdjDaysInput.addEventListener('input', (e) => { state.baseAdjDays = parseInt(e.target.value) || 0; updateUI(); });
 
     weekdayChecks.forEach(check => {
         check.addEventListener('change', () => {
@@ -409,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const setupFacility = (key, checkEl, detailsEl, startEl, endEl, hoursEl, excludeEl, adjEl) => {
+    const setupFacility = (key, checkEl, detailsEl, startEl, endEl, hoursEl, excludeEl) => {
         if (checkEl) checkEl.addEventListener('change', (e) => {
             state[`use${key.charAt(0).toUpperCase() + key.slice(1)}`] = e.target.checked;
             if (detailsEl) detailsEl.classList.toggle('hidden', !e.target.checked);
@@ -419,12 +414,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setupDateMask(endEl, (val) => { state[`${key}End`] = val; updateUI(); });
         if (hoursEl) hoursEl.addEventListener('input', (e) => { state[`${key}Hours`] = parseInt(e.target.value) || 0; updateUI(); });
         if (excludeEl) excludeEl.addEventListener('input', (e) => { state[`${key}ExcludeDates`] = e.target.value; updateUI(); });
-        if (adjEl) adjEl.addEventListener('input', (e) => { state[`${key}AdjDays`] = parseInt(e.target.value) || 0; updateUI(); });
     };
 
-    setupFacility('light', useLightingCheck, lightingDetails, lightStartInput, lightEndInput, lightHoursInput, lightExcludeDatesInput, lightAdjDaysInput);
-    setupFacility('cooling', useCoolingCheck, coolingDetails, coolingStartInput, coolingEndInput, coolingHoursInput, coolingExcludeDatesInput, coolingAdjDaysInput);
-    setupFacility('heating', useHeatingCheck, heatingDetails, heatingStartInput, heatingEndInput, heatingHoursInput, heatingExcludeDatesInput, heatingAdjDaysInput);
+    setupFacility('light', useLightingCheck, lightingDetails, lightStartInput, lightEndInput, lightHoursInput, lightExcludeDatesInput);
+    setupFacility('cooling', useCoolingCheck, coolingDetails, coolingStartInput, coolingEndInput, coolingHoursInput, coolingExcludeDatesInput);
+    setupFacility('heating', useHeatingCheck, heatingDetails, heatingStartInput, heatingEndInput, heatingHoursInput, heatingExcludeDatesInput);
 
     if (gymSizeSelect) gymSizeSelect.addEventListener('change', (e) => { state.size = e.target.value; updateUI(); });
     if (durationInput) durationInput.addEventListener('input', (e) => {
@@ -525,19 +519,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const baseExcludesList = parseExcluded(state.baseExcludeDates);
         const baseExcludesDates = baseExcludesList.map(it => it.date);
         const sessionDates = rawSessionDates.filter(d => !baseExcludesDates.includes(d));
-        const totalSessions = Math.max(0, sessionDates.length + state.baseAdjDays);
+        const totalSessions = Math.max(0, sessionDates.length);
         
-        const calcFacSessions = (use, start, end, excludeStr, adjDays) => {
+        const calcFacSessions = (use, start, end, excludeStr) => {
             if (!use) return 0;
             const excludesList = parseExcluded(excludeStr);
             const excludesDates = excludesList.map(it => it.date);
             const count = sessionDates.filter(d => isWithinRange(d, start, end) && !excludesDates.includes(d)).length;
-            return Math.max(0, count + adjDays);
+            return Math.max(0, count);
         };
 
-        const lightSessions = calcFacSessions(state.useLighting, state.lightStart, state.lightEnd, state.lightExcludeDates, state.lightAdjDays);
-        const coolingSessions = calcFacSessions(state.useCooling, state.coolingStart, state.coolingEnd, state.coolingExcludeDates, state.coolingAdjDays);
-        const heatingSessions = calcFacSessions(state.useHeating, state.heatingStart, state.heatingEnd, state.heatingExcludeDates, state.heatingAdjDays);
+        const lightSessions = calcFacSessions(state.useLighting, state.lightStart, state.lightEnd, state.lightExcludeDates);
+        const coolingSessions = calcFacSessions(state.useCooling, state.coolingStart, state.coolingEnd, state.coolingExcludeDates);
+        const heatingSessions = calcFacSessions(state.useHeating, state.heatingStart, state.heatingEnd, state.heatingExcludeDates);
 
         const hvacSurchargeRate = baseRate * 0.2;
         const totalHours = totalSessions * state.duration;
@@ -598,11 +592,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Excluded days breakdown (Holidays + Additional Excludes + Adj Days)
+        // Excluded days breakdown (Holidays + Additional Excludes)
         const hCount = holidaysInRange.length;
         const validBaseExcludes = baseExcludesList.filter(it => rawSessionDates.includes(it.date));
         const eCount = validBaseExcludes.length;
-        const adjDays = state.baseAdjDays;
 
         if (state.excludeHolidays) {
             const totalEx = hCount + eCount;
@@ -625,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        const hasExInfo = hCount > 0 || eCount > 0 || adjDays !== 0;
+        const hasExInfo = hCount > 0 || eCount > 0;
         updateVisibility(hasExInfo, btnToggleHolidays);
 
         if (hasExInfo) {
@@ -633,9 +626,6 @@ document.addEventListener('DOMContentLoaded', () => {
             html += `<div class="pop-block"><strong>🏛️ 관공서 공휴일 (${hCount}일 ${state.excludeHolidays ? '제외' : '미제외'}):</strong><p>${hCount > 0 ? holidaysInRange.join(', ') : '선택 요일에 해당하는 공휴일 없음'}</p></div>`;
             if (eCount > 0) {
                 html += `<div class="pop-block" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.15);"><strong>✏️ 추가 제외 일자 (${eCount}일 제외):</strong><p>${validBaseExcludes.map(it => it.display).join(', ')}</p></div>`;
-            }
-            if (adjDays !== 0) {
-                html += `<div class="pop-block" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.15);"><strong>🔢 일수 가감 (+/-):</strong><p>${adjDays > 0 ? '+' : ''}${adjDays}일 조정</p></div>`;
             }
             if (holidayMath) holidayMath.innerHTML = html;
         } else {
