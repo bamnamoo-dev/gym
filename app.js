@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event: { small: 30000, medium: 40000, large: 60000 }
         },
         size: 'medium',
+        purpose: 'sports',
         duration: 2,
         category: 'none',
         startDate: '',
@@ -224,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const excludeHolidaysCheck = $('exclude-holidays');
     const baseExcludeDatesInput = $('base-exclude-dates');
     const gymSizeSelect = $('gym-size');
+    const gymPurposeSelect = $('gym-purpose');
     const durationInput = $('duration');
     const durationVal = $('duration-val');
     const categorySelect = $('category');
@@ -471,6 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFacility('heating', useHeatingCheck, heatingDetails, heatingStartInput, heatingEndInput, heatingHoursInput, heatingExcludeDatesInput);
 
     if (gymSizeSelect) gymSizeSelect.addEventListener('change', (e) => { state.size = e.target.value; updateUI(); });
+    if (gymPurposeSelect) gymPurposeSelect.addEventListener('change', (e) => { state.purpose = e.target.value; updateUI(); });
     if (durationInput) durationInput.addEventListener('input', (e) => {
         state.duration = parseInt(e.target.value);
         if (durationVal) durationVal.textContent = `${state.duration}시간`;
@@ -516,8 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateUI() {
-        const isEvent = state.category === 'none';
-        const rateSet = isEvent ? state.rates.event : state.rates.sports;
+        const rateSet = state.rates[state.purpose] || state.rates.sports;
         const baseRate = rateSet[state.size];
         
         const allowedDays = state.mode === 'long' ? state.selectedDays : [0,1,2,3,4,5,6];
@@ -700,6 +702,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const sizeLabel = state.size === 'small' ? '360㎡ 미만' : state.size === 'large' ? '720㎡ 이상' : '360㎡ 이상 ~ 720㎡ 미만';
         setText($('print-gym-size'), sizeLabel);
+
+        const purposeLabel = state.purpose === 'sports' ? '기본 체육활동 (운동/동호회)' : '전용 행사목적 (체육대회/발표회)';
+        setText($('print-purpose'), purposeLabel);
 
         const periodStr = (state.startDate && state.endDate) ? `${state.startDate} ~ ${state.endDate}` : '기간 미설정';
         setText($('print-period'), periodStr);

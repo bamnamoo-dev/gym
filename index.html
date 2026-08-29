@@ -101,11 +101,19 @@
                     </div>
 
                     <div class="input-group">
-                        <label>체육관 규모</label>
+                        <label for="gym-size">체육관 규모</label>
                         <select id="gym-size">
                             <option value="small">360㎡ 미만</option>
                             <option value="medium" selected>360㎡ 이상 ~ 720㎡ 미만</option>
                             <option value="large">720㎡ 이상</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gym-purpose">대관 목적 (조례 용도별 단가)</label>
+                        <select id="gym-purpose">
+                            <option value="sports" selected>기본 체육활동 (일반 동호회·주민 운동)</option>
+                            <option value="event">전용 행사목적 (체육대회·발표회·행사 대관)</option>
                         </select>
                     </div>
 
@@ -314,20 +322,24 @@
                     <tr>
                         <th style="width: 18%;">시설 규모</th>
                         <td id="print-gym-size" style="width: 32%;">360㎡ 이상 ~ 720㎡ 미만</td>
-                        <th style="width: 18%;">대관 기간</th>
-                        <td id="print-period" style="width: 32%;">2026-03-01 ~ 2027-02-28</td>
+                        <th style="width: 18%;">대관 목적</th>
+                        <td id="print-purpose" style="width: 32%;">기본 체육활동 (운동/동호회)</td>
                     </tr>
                     <tr>
+                        <th>대관 기간</th>
+                        <td id="print-period">2026-03-01 ~ 2027-02-28</td>
                         <th>사용 요일 / 시간</th>
                         <td id="print-schedule">월, 화, 수, 목, 금 (회당 2시간)</td>
-                        <th>총 이용 횟수 / 시간</th>
-                        <td id="print-sessions">245회 / 총 490시간</td>
                     </tr>
                     <tr>
+                        <th>총 이용 횟수 / 시간</th>
+                        <td id="print-sessions">245회 / 총 490시간</td>
                         <th>공휴일 / 제외일</th>
                         <td id="print-excludes">관공서 공휴일 15일 제외</td>
+                    </tr>
+                    <tr>
                         <th>조례 감면 대상</th>
-                        <td id="print-category">지역 주민 (60% 감면)</td>
+                        <td id="print-category" colspan="3">지역 주민 (6개월+ - 60% 감면)</td>
                     </tr>
                 </tbody>
             </table>
